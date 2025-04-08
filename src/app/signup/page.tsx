@@ -1,8 +1,8 @@
-import {HeroPage} from '@/components/HeroPage';
+import SignupForm from '@/components/signup-form';
 
-export default function HomePage() {
+function SignupPage() {
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden">
+    <div className="flex flex-col items-center justify-center h-[calc(100vh-4rem)]">
       <div className="absolute inset-0 flex items-center justify-center opacity-100">
         <img
           alt="background"
@@ -10,7 +10,9 @@ export default function HomePage() {
           className="object-cover w-full h-full opacity-60 dark:opacity-50 [mask-image:radial-gradient(75%_75%_at_center,white,transparent)]"
         />
       </div>
-      <HeroPage />
+      <SignupForm className="w-full max-w-sm backdrop-blur-2xl" />
     </div>
   );
 }
+
+export default SignupPage;
