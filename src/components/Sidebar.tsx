@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import {usePathname} from 'next/navigation';
 import Link from 'next/link';
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useCallback} from 'react'; // Import useCallback
 import {onAuthStateChanged, signOut} from 'firebase/auth';
 import {auth} from '@/lib/firebase';
 
@@ -21,6 +21,7 @@ import {Separator} from '@/components/ui/separator';
 import {Button} from '@/components/ui/button';
 import GithubIcon from './GithubIcon';
 import ModeToggleFull from './ModeToggleFull';
+import React from 'react'; // Import React
 
 interface NavItem {
   label: string;
@@ -34,7 +35,8 @@ interface UserData {
   name: string;
 }
 
-export default function Sidebar() {
+const Sidebar = React.memo(function Sidebar() {
+  // Wrap with React.memo
   const pathname = usePathname();
   const [userData, setUserData] = useState<UserData | null>(null);
 
@@ -82,36 +84,40 @@ export default function Sidebar() {
     }
   ];
 
-  const renderNav = () => (
-    <nav className="flex flex-col space-y-1">
-      {navItems.map(({label, href, icon, external}) => {
-        const isActive = pathname === href;
-        return (
-          <Button
-            key={label}
-            variant="ghost"
-            size="sm"
-            asChild
-            className={`justify-start w-full ${
-              isActive
-                ? 'bg-accent text-accent-foreground'
-                : 'hover:bg-accent hover:text-accent-foreground'
-            }`}
-          >
-            <Link
-              href={href}
-              target={external ? '_blank' : undefined}
-              rel={external ? 'noopener noreferrer' : undefined}
-              className="flex items-center gap-2 w-full"
+  const renderNav = useCallback(
+    () => (
+      // Use useCallback for memoization
+      <nav className="flex flex-col space-y-1">
+        {navItems.map(({label, href, icon, external}) => {
+          const isActive = pathname === href;
+          return (
+            <Button
+              key={label}
+              variant="ghost"
+              size="sm"
+              asChild
+              className={`justify-start w-full ${
+                isActive
+                  ? 'bg-accent text-accent-foreground'
+                  : 'hover:bg-accent hover:text-accent-foreground'
+              }`}
             >
-              {icon}
-              <span>{label}</span>
-            </Link>
-          </Button>
-        );
-      })}
-    </nav>
-  );
+              <Link
+                href={href}
+                target={external ? '_blank' : undefined}
+                rel={external ? 'noopener noreferrer' : undefined}
+                className="flex items-center gap-2 w-full"
+              >
+                {icon}
+                <span>{label}</span>
+              </Link>
+            </Button>
+          );
+        })}
+      </nav>
+    ),
+    [pathname, navItems]
+  ); // Re-render only if pathname or navItems changes
 
   const userSection = userData ? (
     <div className="flex flex-col items-center space-y-1">
@@ -204,4 +210,6 @@ export default function Sidebar() {
       </aside>
     </>
   );
-}
+});
+
+export default Sidebar;
