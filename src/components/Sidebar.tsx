@@ -2,12 +2,12 @@
 
 import {
   HomeIcon,
-  UserIcon,
   LogOutIcon,
   ListChecksIcon,
   PlusIcon,
   EyeIcon,
-  MenuIcon
+  MenuIcon,
+  User
 } from 'lucide-react';
 import {usePathname} from 'next/navigation';
 import Link from 'next/link';
@@ -59,6 +59,11 @@ export default function Sidebar() {
   const navItems: NavItem[] = [
     {label: 'Home', href: '/', icon: <HomeIcon className="h-5 w-5" />},
     {
+      label: 'Profile',
+      href: `/profile/${userData?.username}`,
+      icon: <User className="h-5 w-5" />
+    },
+    {
       label: 'Tasks',
       href: '/tasks',
       icon: <ListChecksIcon className="h-5 w-5" />
@@ -109,19 +114,22 @@ export default function Sidebar() {
   );
 
   const userSection = userData ? (
-    <Link
-      href={`/profile/${userData.username}`}
-      className="flex flex-col items-center space-y-1"
-    >
-      <Button variant={'outline'} className="w-full">
-        <span className="text-sm font-medium text-foreground">
-          {userData.name}
-        </span>
-        <span className="text-xs text-muted-foreground">
-          @{userData.username}
-        </span>
-      </Button>
-    </Link>
+    <div className="flex flex-col items-center space-y-1">
+      <span className="text-xs text-muted-foreground truncate">{pathname}</span>
+      <Link
+        href={`/profile/${userData.username}`}
+        className="flex flex-col items-center space-y-1 mt-1"
+      >
+        <Button variant={'outline'} className="w-full">
+          <span className="text-sm font-medium text-foreground">
+            {userData.name}
+          </span>
+          <span className="text-xs text-muted-foreground">
+            @{userData.username}
+          </span>
+        </Button>
+      </Link>
+    </div>
   ) : (
     <Link href="/signin">
       <Button variant="outline" className="w-full">

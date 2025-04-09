@@ -1,4 +1,4 @@
-'use client';
+'use server';
 
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar';
 import {Button} from '@/components/ui/button';
@@ -9,14 +9,13 @@ interface ProfileInfoProps {
     name: string;
     username: string;
     email: string;
-    createdAt: string; // ISO date string
-    tasksCount: number; // from _count.tasks
+    createdAt: string;
+    tasksCount: number;
     emailVerified: boolean;
   };
 }
 
-export default function ProfileInfo({user}: ProfileInfoProps) {
-  // Initials fallback
+export default async function ProfileInfo({user}: ProfileInfoProps) {
   const initials = user.name
     .split(' ')
     .map((n) => n[0])
@@ -24,7 +23,6 @@ export default function ProfileInfo({user}: ProfileInfoProps) {
     .toUpperCase()
     .slice(0, 2);
 
-  // Format join date
   const joinDate = new Date(user.createdAt).toLocaleDateString(undefined, {
     year: 'numeric',
     month: 'long',
@@ -33,7 +31,6 @@ export default function ProfileInfo({user}: ProfileInfoProps) {
 
   return (
     <div className="bg-background border border-border rounded-lg p-6 w-full max-w-md">
-      {/* Header */}
       <div className="flex items-center space-x-4 mb-6">
         <Avatar className="h-16 w-16">
           <AvatarImage src={undefined} alt={user.name} />
@@ -69,9 +66,8 @@ export default function ProfileInfo({user}: ProfileInfoProps) {
 
       <Separator className="mb-6" />
 
-      {/* Actions */}
       <div className="flex justify-end">
-        <Button variant="outline">Edit Profile</Button>
+        <Button variant="outline">Export Tasks</Button>
       </div>
     </div>
   );
