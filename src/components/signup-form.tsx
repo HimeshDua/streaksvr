@@ -14,18 +14,7 @@ import {Label} from '@/components/ui/label';
 import {useEffect, useState} from 'react';
 import {useRouter} from 'next/navigation';
 import Link from 'next/link';
-
-interface FirebaseUser {
-  uid: string;
-  email: string;
-  emailVerified: boolean;
-}
-
-interface ExtraUserInfo {
-  username: string;
-  name: string;
-  password: string;
-}
+import {EyeIcon, EyeOffIcon} from 'lucide-react';
 
 export default function SignupForm({
   className,
@@ -40,6 +29,8 @@ export default function SignupForm({
   const router = useRouter();
   const [isDisabled, setIsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
     setIsDisabled(false);
@@ -90,7 +81,7 @@ export default function SignupForm({
       const data = await response.json();
 
       if (response.ok) {
-        router.push('/'); // Redirect on successful signup
+        router.push('/');
       } else {
         setError(data.error || 'Signup failed');
       }
@@ -121,6 +112,7 @@ export default function SignupForm({
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     required
+                    autoComplete="username"
                     disabled={isDisabled}
                   />
                 </div>
@@ -133,6 +125,7 @@ export default function SignupForm({
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
+                    autoComplete="name"
                     disabled={isDisabled}
                   />
                 </div>
@@ -150,36 +143,69 @@ export default function SignupForm({
                   disabled={isDisabled}
                 />
               </div>
+
               <div className="grid gap-2">
                 <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  autoComplete="new-password"
-                  placeholder="••••••••"
-                  minLength={6}
-                  maxLength={20}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  disabled={isDisabled}
-                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="new-password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    minLength={6}
+                    maxLength={100}
+                    disabled={isDisabled}
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute inset-y-0 right-2 flex items-center text-muted-foreground"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? (
+                      <EyeOffIcon className="h-4 w-4" />
+                    ) : (
+                      <EyeIcon className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
               </div>
+
               <div className="grid gap-2">
                 <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  value={confirmPassword}
-                  autoComplete="new-password"
-                  placeholder="••••••••"
-                  minLength={6}
-                  maxLength={100}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  disabled={isDisabled}
-                />
+                <div className="relative">
+                  <Input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    autoComplete="new-password"
+                    placeholder="••••••••"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    minLength={6}
+                    maxLength={100}
+                    disabled={isDisabled}
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword((prev) => !prev)}
+                    className="absolute inset-y-0 right-2 flex items-center text-muted-foreground"
+                    tabIndex={-1}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOffIcon className="h-4 w-4" />
+                    ) : (
+                      <EyeIcon className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
               </div>
+
               <Button
                 type="submit"
                 disabled={isDisabled || loading}

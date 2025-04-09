@@ -16,7 +16,6 @@ export async function POST(req: NextRequest) {
     const body: RequestBody = await req.json();
     const {email, name, username, password} = body;
 
-    // --- Backend Validations ---
     if (!email.includes('@') || username.length < 4 || name.length < 4) {
       return NextResponse.json(
         {error: 'Please fill out all fields correctly'},
@@ -34,6 +33,16 @@ export async function POST(req: NextRequest) {
     const existingUsername = await prisma.user.findUnique({
       where: {username: username}
     });
+    const existingEmail = await prisma.user.findUnique({
+      where: {email: email}
+    });
+
+    if (existingUsername && existingEmail) {
+      return NextResponse.json(
+        {error: 'Account already exists, Create new account.'},
+        {status: 409}
+      );
+    }
 
     if (existingUsername) {
       return NextResponse.json(
@@ -42,20 +51,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const existingEmail = await prisma.user.findUnique({
-      where: {email: email}
-    });
-
     if (existingEmail) {
       return NextResponse.json({error: 'Email already exists.'}, {status: 409});
     }
 
-    // --- Create User in Firebase Authentication (Using Admin SDK) ---
     try {
       const firebaseUserRecord = await firebaseAdminAuth.createUser({
         email: email,
         password: password,
-        displayName: name // Optional: Set display name
+        displayName: name
       });
 
       const firebaseUid = firebaseUserRecord.uid;
@@ -67,10 +71,9 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      // --- Hash the password before storing in your database ---
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // --- Sync the new user to the Prisma database ---
+      // new user
       const newUser = await prisma.user.create({
         data: {
           firebaseId: firebaseUid,
@@ -81,7 +84,6 @@ export async function POST(req: NextRequest) {
         }
       });
 
-      // --- Send a success response with the new user data ---
       return NextResponse.json(newUser, {status: 201});
     } catch (firebaseError: any) {
       console.error('Firebase Admin SDK error:', firebaseError);

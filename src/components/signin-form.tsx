@@ -12,10 +12,11 @@ import {
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
 import {useEffect, useState} from 'react';
-import {onAuthStateChanged, signInWithEmailAndPassword} from 'firebase/auth';
+import {signInWithEmailAndPassword} from 'firebase/auth';
 import {auth} from '@/lib/firebase';
 import {useRouter} from 'next/navigation';
 import Link from 'next/link';
+import {EyeIcon, EyeOffIcon} from 'lucide-react';
 
 interface UserData {
   username: string;
@@ -34,17 +35,17 @@ export default function SigninForm({
   const router = useRouter();
   const [isDisabled, setIsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    setIsDisabled(false);
+    setIsDisabled(false); // Enable the form after mounting
   }, []);
-
-  useEffect(() => {}, []);
 
   const handleSignin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
+
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -54,7 +55,7 @@ export default function SigninForm({
       const user = userCredential.user;
 
       if (user) {
-        const res = await fetch('/api/auth/get-username', {
+        const res = await fetch('/api/auth/signin', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({firebaseId: user.uid})
@@ -69,12 +70,13 @@ export default function SigninForm({
         }
       }
     } catch (error: any) {
-      setError(getErrorMessage(error.code));
+      // General error handling
+      console.error('Error during sign in:', error.message);
+      setError(error.message || 'An unexpected error occurred');
     } finally {
       setLoading(false);
     }
   };
-
   return (
     <div className={cn('', className)} {...props}>
       <Card className=" shadow-md">
@@ -102,18 +104,33 @@ export default function SigninForm({
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  autoComplete="current-password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  minLength={6}
-                  maxLength={100}
-                  disabled={isDisabled}
-                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="current-password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    minLength={6}
+                    maxLength={100}
+                    disabled={isDisabled}
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute inset-y-0 right-2 flex items-center text-muted-foreground"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? (
+                      <EyeOffIcon className="h-4 w-4" />
+                    ) : (
+                      <EyeIcon className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
               </div>
 
               <Button

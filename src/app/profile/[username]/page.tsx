@@ -8,6 +8,8 @@ import {Badge} from '@/components/ui/badge';
 import {Card, CardContent} from '@/components/ui/card';
 import {Button} from '@/components/ui/button'; // Import the Button component
 import Link from 'next/link';
+import {signOut} from 'firebase/auth';
+import {auth} from 'firebase-admin';
 
 async function fetchUser(username: string) {
   try {
@@ -99,9 +101,7 @@ export default async function UserProfileShadcn({
               variant="destructive"
               className="w-full md:w-full  bg-red-600 hover:bg-red-700 transition duration-300"
               asChild
-            >
-              <Link href={'/auth/signout'}>Logout</Link>
-            </Button>
+            ></Button>
           </div>
         </CardContent>
       </Card>
