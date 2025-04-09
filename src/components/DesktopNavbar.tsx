@@ -1,12 +1,21 @@
 'use client';
+
 import {BellIcon, HomeIcon, UserIcon} from 'lucide-react';
+
 import {Button} from '@/components/ui/button';
+
 import {onAuthStateChanged, signOut} from 'firebase/auth';
+
 import Link from 'next/link';
+
 import ModeToggle from './ModeToggle';
+
 import {useEffect, useState} from 'react';
+
 import {auth} from '@/lib/firebase';
+
 import GithubIcon from './GithubIcon';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,18 +23,24 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from './ui/dropdown-menu';
+
 import {Avatar, AvatarFallback, AvatarImage} from './ui/avatar';
+
 import {Router} from 'next/router';
 
 interface UserData {
   username: string;
+
   firebaseId: string;
+
   email: string;
+
   name: string;
 }
 
 function DesktopNavbar() {
   const router = Router;
+
   const [userData, setUserData] = useState<UserData | null>(null);
 
   useEffect(() => {
@@ -33,11 +48,14 @@ function DesktopNavbar() {
       if (user) {
         const res = await fetch('/api/auth/get-username', {
           method: 'POST',
+
           headers: {'Content-Type': 'application/json'},
+
           body: JSON.stringify({firebaseId: user.uid})
         });
 
         const data = await res.json();
+
         if (res.ok) {
           setUserData(data);
         } else {
@@ -56,14 +74,18 @@ function DesktopNavbar() {
           <Button variant="ghost" className="flex items-center gap-2" asChild>
             <Link href="/">
               <HomeIcon className="w-4 h-4" />
+
               <span className="hidden lg:inline">Home</span>
             </Link>
           </Button>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">{userData.name}</Button>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">{userData.name}</Button>
+              </DropdownMenuTrigger>
             </DropdownMenuTrigger>
+
             <DropdownMenuContent>
               <DropdownMenuItem asChild>
                 <Link
@@ -71,6 +93,7 @@ function DesktopNavbar() {
                   className="flex items-center gap-2"
                 >
                   <UserIcon className="w-4 h-4" />
+
                   <span className="hidden lg:inline">Profile</span>
                 </Link>
               </DropdownMenuItem>{' '}
@@ -78,7 +101,9 @@ function DesktopNavbar() {
               <DropdownMenuItem
                 onClick={async () => {
                   await signOut(auth);
+
                   setUserData(null);
+
                   window.location.href = '/';
                 }}
               >
@@ -91,9 +116,12 @@ function DesktopNavbar() {
         <Button variant="default" className="flex items-center gap-2" asChild>
           <Link href="/signup">Sign In</Link>
         </Button>
+
         // <Button variant="default">Sign In</Button>
       )}
+
       <ModeToggle />
+
       <Button variant="ghost" asChild>
         <Link href="https://github.com/HimeshDua/streaksvr">
           <GithubIcon className="h-[1.2rem]  w-[1.2rem]" />
