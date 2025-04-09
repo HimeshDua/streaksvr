@@ -30,10 +30,11 @@ async function fetchUser(username: string) {
 }
 
 export default async function UserProfileShadcn({
-  params
+  params: paramsPromise
 }: {
-  params: {username: string};
+  params: Promise<{username: string}>;
 }) {
+  const params = await paramsPromise;
   const {username} = params;
   const user = await fetchUser(username);
 
