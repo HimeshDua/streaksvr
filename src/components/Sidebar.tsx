@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import {usePathname} from 'next/navigation';
 import Link from 'next/link';
-import {useEffect, useState, useCallback} from 'react'; // Import useCallback
+import {useEffect, useState, useCallback} from 'react';
 import {onAuthStateChanged, signOut} from 'firebase/auth';
 import {auth} from '@/lib/firebase';
 
@@ -21,7 +21,7 @@ import {Separator} from '@/components/ui/separator';
 import {Button} from '@/components/ui/button';
 import GithubIcon from './GithubIcon';
 import ModeToggleFull from './ModeToggleFull';
-import React from 'react'; // Import React
+import React from 'react';
 
 interface NavItem {
   label: string;
@@ -36,23 +36,40 @@ interface UserData {
 }
 
 const Sidebar = React.memo(function Sidebar() {
-  // Wrap with React.memo
   const pathname = usePathname();
   const [userData, setUserData] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState(true); // Add loading state
+  const [error, setError] = useState<string | null>(null); // Add error state
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (user) => {
+      setLoading(true);
+      setError(null);
       if (user) {
-        const res = await fetch('/api/auth/get-username', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({firebaseId: user.uid})
-        });
-        const data = await res.json();
-        if (res.ok) setUserData(data);
-        else setUserData(null);
+        try {
+          const res = await fetch('/api/auth/get-username', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({firebaseId: user.uid})
+          });
+          const data = await res.json();
+          if (res.ok) {
+            setUserData(data);
+          } else {
+            setUserData(null);
+            setError(
+              `Failed to fetch username: ${data?.message || res.status}`
+            );
+          }
+        } catch (err: any) {
+          setUserData(null);
+          setError(`Error fetching username: ${err.message}`);
+        } finally {
+          setLoading(false);
+        }
       } else {
         setUserData(null);
+        setLoading(false);
       }
     });
     return () => unsub();
@@ -86,7 +103,6 @@ const Sidebar = React.memo(function Sidebar() {
 
   const renderNav = useCallback(
     () => (
-      // Use useCallback for memoization
       <nav className="flex flex-col space-y-1">
         {navItems.map(({label, href, icon, external}) => {
           const isActive = pathname === href;
@@ -117,32 +133,45 @@ const Sidebar = React.memo(function Sidebar() {
       </nav>
     ),
     [pathname, navItems]
-  ); // Re-render only if pathname or navItems changes
+  );
 
-  const userSection = userData ? (
-    <div className="flex flex-col items-center space-y-1">
-      <span className="text-xs text-muted-foreground truncate">{pathname}</span>
-      <Link
-        href={`/profile/${userData.username}`}
-        className="flex flex-col items-center space-y-1 mt-1"
-      >
-        <Button variant={'outline'} className="w-full">
-          <span className="text-sm font-medium text-foreground">
-            {userData.name}
-          </span>
-          <span className="text-xs text-muted-foreground">
-            @{userData.username}
-          </span>
+  let userSectionContent;
+  if (loading) {
+    userSectionContent = <div>Loading user...</div>; // Basic loading indicator
+  } else if (error) {
+    userSectionContent = (
+      <div className="text-red-500 text-sm">Error: {error}</div>
+    );
+  } else if (userData) {
+    userSectionContent = (
+      <div className="flex flex-col items-center space-y-1">
+        <span className="text-xs text-muted-foreground truncate">
+          {pathname}
+        </span>
+        <Link
+          href={`/profile/${userData.username}`}
+          className="flex flex-col items-center space-y-1 mt-1"
+        >
+          <Button variant={'outline'} className="w-full">
+            <span className="text-sm font-medium text-foreground">
+              {userData.name}
+            </span>
+            <span className="text-xs text-muted-foreground">
+              @{userData.username}
+            </span>
+          </Button>
+        </Link>
+      </div>
+    );
+  } else {
+    userSectionContent = (
+      <Link href="/signin">
+        <Button variant="outline" className="w-full">
+          Sign In
         </Button>
       </Link>
-    </div>
-  ) : (
-    <Link href="/signin">
-      <Button variant="outline" className="w-full">
-        Sign In
-      </Button>
-    </Link>
-  );
+    );
+  }
 
   return (
     <>
@@ -163,7 +192,7 @@ const Sidebar = React.memo(function Sidebar() {
           className="w-64 p-4 bg-background text-foreground"
         >
           <ScrollArea className="flex flex-col h-full">
-            <div className="mb-4">{userSection}</div>
+            <div className="mb-4">{userSectionContent}</div>
             <Separator />
             {renderNav()}
             <Separator className="mt-auto" />
@@ -187,7 +216,7 @@ const Sidebar = React.memo(function Sidebar() {
       {/* Desktop: Static sidebar */}
       <aside className="hidden md:flex flex-col w-80 h-screen border-r border-border bg-background text-foreground">
         <ScrollArea className="flex-1 p-4 flex flex-col">
-          <div className="mb-6">{userSection}</div>
+          <div className="mb-6">{userSectionContent}</div>
           <Separator />
           <div className="mt-4">{renderNav()}</div>
         </ScrollArea>
