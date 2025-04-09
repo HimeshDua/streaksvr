@@ -11,6 +11,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger
 } from './ui/dropdown-menu';
 import {Avatar, AvatarFallback, AvatarImage} from './ui/avatar';
@@ -61,10 +62,7 @@ function DesktopNavbar() {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Avatar className="cursor-pointer">
-                <AvatarImage src={undefined} />
-                <AvatarFallback>{userData.name}</AvatarFallback>
-              </Avatar>
+              <Button variant="outline">{userData.name}</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem asChild>
@@ -75,7 +73,8 @@ function DesktopNavbar() {
                   <UserIcon className="w-4 h-4" />
                   <span className="hidden lg:inline">Profile</span>
                 </Link>
-              </DropdownMenuItem>
+              </DropdownMenuItem>{' '}
+              <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={async () => {
                   await signOut(auth);
