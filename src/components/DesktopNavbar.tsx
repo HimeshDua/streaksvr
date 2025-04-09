@@ -52,20 +52,6 @@ function DesktopNavbar() {
     <div className="hidden md:flex items-center space-x-4">
       {userData ? (
         <>
-          {/* <Button variant="ghost" className="flex items-center gap-2" asChild>
-            <Link href="/notifications">
-              <BellIcon className="w-4 h-4" />
-              <span className="hidden lg:inline">Notifications</span>
-            </Link>
-          </Button> */}
-
-          {/* <Button variant="ghost" className="flex items-center gap-2" asChild>
-            <Link href={`/profile/${userData.username}`}>
-              <UserIcon className="w-4 h-4" />
-              <span className="hidden lg:inline">Profile</span>
-            </Link>
-          </Button> */}
-
           <Button variant="ghost" className="flex items-center gap-2" asChild>
             <Link href="/">
               <HomeIcon className="w-4 h-4" />
@@ -77,14 +63,7 @@ function DesktopNavbar() {
             <DropdownMenuTrigger asChild>
               <Avatar className="cursor-pointer">
                 <AvatarImage src={undefined} />
-                <AvatarFallback>
-                  {userData?.name
-                    ?.split(' ')
-                    .map((n) => n[0])
-                    .join('')
-                    .toUpperCase()
-                    .slice(0, 2)}
-                </AvatarFallback>
+                <AvatarFallback>{userData.name}</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
