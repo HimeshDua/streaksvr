@@ -10,6 +10,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({error: 'Missing firebaseId'}, {status: 400});
     }
 
+    //d
     const user = await prisma.user.findUnique({
       where: {firebaseId}
     });
