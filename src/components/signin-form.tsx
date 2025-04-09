@@ -34,14 +34,25 @@ export default function SigninForm({
   const router = useRouter();
   const [isDisabled, setIsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [UserData, setUserData] = useState<UserData | null>(null);
 
   useEffect(() => {
     setIsDisabled(false);
   }, []);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+  useEffect(() => {}, []);
+
+  const handleSignin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+
       if (user) {
         const res = await fetch('/api/auth/get-username', {
           method: 'POST',
@@ -51,23 +62,12 @@ export default function SigninForm({
 
         const data = await res.json();
         if (res.ok) {
-          setUserData(data);
+          router.push(`/profile/${data.username}`);
         } else {
           console.error('Error fetching user:', data.error);
+          setError('Failed to fetch user profile information.');
         }
       }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  const handleSignin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      router.push(`/profile/${UserData?.username}`);
     } catch (error: any) {
       setError(getErrorMessage(error.code));
     } finally {
