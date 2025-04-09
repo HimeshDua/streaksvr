@@ -19,8 +19,8 @@ import {Sheet, SheetTrigger, SheetContent} from '@/components/ui/sheet';
 import {ScrollArea} from '@/components/ui/scroll-area';
 import {Separator} from '@/components/ui/separator';
 import {Button} from '@/components/ui/button';
-import ModeToggle from './ModeToggle';
 import GithubIcon from './GithubIcon';
+import ModeToggleFull from './ModeToggleFull';
 
 interface NavItem {
   label: string;
@@ -178,7 +178,7 @@ export default function Sidebar() {
           <div className="mt-4">{renderNav()}</div>
         </ScrollArea>
         <div className="p-4 space-y-2">
-          <ModeToggle />
+          <ModeToggleFull />
           {userData && (
             <Button
               variant="ghost"
