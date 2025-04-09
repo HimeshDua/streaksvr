@@ -63,8 +63,12 @@ const HeroPage = ({
         </div>
 
         {/* Image */}
-        <div className="lg:w-1/3 lg:pl-10">
-          <img src="/iphone.png" alt="Hero Image" />
+        <div className="lg:w-1/3 lg:pl-10 pointer-events-none">
+          <img
+            className="scale-125 pointer-events-none"
+            src="/Coach-cuate.svg"
+            alt="Hero Image"
+          />
         </div>
       </div>
     </section>
