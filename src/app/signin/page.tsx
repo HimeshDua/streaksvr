@@ -6,7 +6,7 @@ function SigninPage() {
       <div className="absolute inset-0 pointer-events-none -z-1 flex items-center justify-center opacity-100">
         <img
           alt="background"
-          src="./square-alt-grid.svg"
+          src="/square-alt-grid.svg"
           className="object-contain pointer-events-none -z-1 w-full h-full opacity-100 dark:opacity-50 [mask-image:radial-gradient(75%_75%_at_center,white,transparent)]"
         />
       </div>

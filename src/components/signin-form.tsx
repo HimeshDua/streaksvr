@@ -12,10 +12,17 @@ import {
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
 import {useEffect, useState} from 'react';
-import {signInWithEmailAndPassword} from 'firebase/auth';
+import {onAuthStateChanged, signInWithEmailAndPassword} from 'firebase/auth';
 import {auth} from '@/lib/firebase';
 import {useRouter} from 'next/navigation';
 import Link from 'next/link';
+
+interface UserData {
+  username: string;
+  firebaseId: string;
+  email: string;
+  name: string;
+}
 
 export default function SigninForm({
   className,
@@ -27,9 +34,31 @@ export default function SigninForm({
   const router = useRouter();
   const [isDisabled, setIsDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [UserData, setUserData] = useState<UserData | null>(null);
 
   useEffect(() => {
     setIsDisabled(false);
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const res = await fetch('/api/auth/get-username', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({firebaseId: user.uid})
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          setUserData(data);
+        } else {
+          console.error('Error fetching user:', data.error);
+        }
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const handleSignin = async (e: React.FormEvent) => {
@@ -38,7 +67,7 @@ export default function SigninForm({
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push('/');
+      router.push(`/profile/${UserData?.username}`);
     } catch (error: any) {
       setError(getErrorMessage(error.code));
     } finally {
@@ -52,10 +81,7 @@ export default function SigninForm({
         <CardHeader>
           <CardTitle className="text-2xl">Sign In</CardTitle>
           <CardDescription className="text-muted-foreground">
-            {/* Login to your account by entering your email and password below. */}
-            {/* <p className="text-sm text-muted-foreground"> */}
             Use your registered email address.
-            {/* </p> */}
           </CardDescription>
         </CardHeader>
         <CardContent>

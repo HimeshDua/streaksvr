@@ -1,11 +1,11 @@
 'use client';
 import {BellIcon, HomeIcon, UserIcon} from 'lucide-react';
 import {Button} from '@/components/ui/button';
+import {onAuthStateChanged} from 'firebase/auth';
 import Link from 'next/link';
 import ModeToggle from './ModeToggle';
 import {useEffect, useState} from 'react';
 import {auth} from '@/lib/firebase';
-import {prisma} from '@/lib/prisma';
 
 interface UserData {
   username: string;
@@ -15,28 +15,27 @@ interface UserData {
 }
 
 function DesktopNavbar() {
-  const [userData, setUserData] = useState<UserData | null>(null); // user data state
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const user = auth.currentUser;
-
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const userFromDb: any = await prisma.user.findUnique({
-          where: {firebaseId: user.uid}
+        const res = await fetch('/api/auth/get-username', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({firebaseId: user.uid})
         });
 
-        console.log('dbuser', userFromDb);
-
-        if (userFromDb) {
-          setUserData(userFromDb);
+        const data = await res.json();
+        if (res.ok) {
+          setUserData(data);
         } else {
-          console.error('User not found in database.');
+          console.error('Error fetching user:', data.error);
         }
       }
-    };
+    });
 
-    fetchUserData();
+    return () => unsubscribe();
   }, []);
 
   return (
@@ -75,7 +74,7 @@ function DesktopNavbar() {
         </Button>
       )}
 
-      <Button variant="default">Sign In</Button>
+      {/* <Button variant="default">Sign In</Button> */}
     </div>
   );
 }

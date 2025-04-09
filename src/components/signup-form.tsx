@@ -84,7 +84,6 @@ export default function SignupForm({
           password,
           username,
           name
-          // Omitting confirmPassword from the request body as the backend handles the check
         })
       });
 
