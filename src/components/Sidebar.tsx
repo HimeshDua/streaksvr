@@ -20,7 +20,6 @@ import {ScrollArea} from '@/components/ui/scroll-area';
 import {Separator} from '@/components/ui/separator';
 import {Button} from '@/components/ui/button';
 import GithubIcon from './GithubIcon';
-import ModeToggleFull from './ModeToggleFull';
 import React from 'react';
 import {useAuth} from '@/contexts/AuthContext';
 
@@ -180,7 +179,6 @@ const Sidebar = React.memo(function Sidebar() {
           <div className="mt-4">{renderNav()}</div>
         </ScrollArea>
         <div className="p-4 space-y-2">
-          <ModeToggleFull />
           {userData && (
             <Button
               variant="ghost"
