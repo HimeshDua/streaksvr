@@ -44,15 +44,19 @@ const Sidebar = React.memo(function Sidebar() {
     },
     {
       label: 'Tasks',
-      href: '/tasks',
+      href: `/profile/${userData?.username}/tasks`,
       icon: <ListChecksIcon className="h-5 w-5" />
     },
     {
       label: 'Add Task',
-      href: '/tasks/add',
+      href: `/profile/${userData?.username}/tasks/add`,
       icon: <PlusIcon className="h-5 w-5" />
     },
-    {label: 'Reviews', href: '/reviews', icon: <EyeIcon className="h-5 w-5" />},
+    {
+      label: 'Reviews',
+      href: `/profile/${userData?.username}/reviews`,
+      icon: <EyeIcon className="h-5 w-5" />
+    },
     {
       label: 'GitHub',
       href: 'https://github.com/HimeshDua/streaksvr',
