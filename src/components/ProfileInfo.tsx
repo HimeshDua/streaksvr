@@ -1,5 +1,6 @@
-'use server';
+'use client'; // Add 'use client' at the top
 
+import React from 'react'; // Import React, since it's now a Client Component
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar';
 import {Button} from '@/components/ui/button';
 import {Separator} from '@/components/ui/separator';
@@ -15,7 +16,8 @@ interface ProfileInfoProps {
   };
 }
 
-export default async function ProfileInfo({user}: ProfileInfoProps) {
+const ProfileInfo = ({user}: ProfileInfoProps) => {
+  // Make it a regular function component
   const initials = user.name
     .split(' ')
     .map((n) => n[0])
@@ -71,4 +73,6 @@ export default async function ProfileInfo({user}: ProfileInfoProps) {
       </div>
     </div>
   );
-}
+};
+
+export default ProfileInfo;

@@ -11,8 +11,8 @@ import {
 } from 'lucide-react';
 import {usePathname} from 'next/navigation';
 import Link from 'next/link';
-import {useEffect, useState, useCallback} from 'react';
-import {onAuthStateChanged, signOut} from 'firebase/auth';
+import {useCallback} from 'react';
+import {signOut} from 'firebase/auth';
 import {auth} from '@/lib/firebase';
 
 import {Sheet, SheetTrigger, SheetContent} from '@/components/ui/sheet';
@@ -22,6 +22,7 @@ import {Button} from '@/components/ui/button';
 import GithubIcon from './GithubIcon';
 import ModeToggleFull from './ModeToggleFull';
 import React from 'react';
+import {useAuth} from '@/contexts/AuthContext';
 
 interface NavItem {
   label: string;
@@ -30,50 +31,9 @@ interface NavItem {
   external?: boolean;
 }
 
-interface UserData {
-  username: string;
-  name: string;
-}
-
 const Sidebar = React.memo(function Sidebar() {
   const pathname = usePathname();
-  const [userData, setUserData] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState(true); // Add loading state
-  const [error, setError] = useState<string | null>(null); // Add error state
-
-  useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (user) => {
-      setLoading(true);
-      setError(null);
-      if (user) {
-        try {
-          const res = await fetch('/api/auth/get-username', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({firebaseId: user.uid})
-          });
-          const data = await res.json();
-          if (res.ok) {
-            setUserData(data);
-          } else {
-            setUserData(null);
-            setError(
-              `Failed to fetch username: ${data?.message || res.status}`
-            );
-          }
-        } catch (err: any) {
-          setUserData(null);
-          setError(`Error fetching username: ${err.message}`);
-        } finally {
-          setLoading(false);
-        }
-      } else {
-        setUserData(null);
-        setLoading(false);
-      }
-    });
-    return () => unsub();
-  }, []);
+  const {userData, loading, error} = useAuth();
 
   const navItems: NavItem[] = [
     {label: 'Home', href: '/', icon: <HomeIcon className="h-5 w-5" />},
@@ -144,24 +104,19 @@ const Sidebar = React.memo(function Sidebar() {
     );
   } else if (userData) {
     userSectionContent = (
-      <div className="flex flex-col items-center space-y-1">
-        <span className="text-xs text-muted-foreground truncate">
-          {pathname}
-        </span>
-        <Link
-          href={`/profile/${userData.username}`}
-          className="flex flex-col items-center space-y-1 mt-1"
-        >
-          <Button variant={'outline'} className="w-full">
-            <span className="text-sm font-medium text-foreground">
-              {userData.name}
-            </span>
-            <span className="text-xs text-muted-foreground">
-              @{userData.username}
-            </span>
-          </Button>
-        </Link>
-      </div>
+      <Link
+        href={`/profile/${userData.username}`}
+        className="flex flex-col items-center space-y-1 mt-8 md:mt-1"
+      >
+        <Button variant={'outline'} className="w-full">
+          <span className="text-sm font-medium text-foreground">
+            {userData.name}
+          </span>
+          <span className="text-xs text-muted-foreground">
+            @{userData.username}
+          </span>
+        </Button>
+      </Link>
     );
   } else {
     userSectionContent = (

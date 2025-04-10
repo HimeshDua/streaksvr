@@ -20,46 +20,22 @@ import {
 import {useEffect, useState} from 'react';
 import Link from 'next/link';
 import {useTheme} from 'next-themes';
-import {onAuthStateChanged, signOut} from 'firebase/auth';
+import {signOut} from 'firebase/auth';
 import {auth} from '@/lib/firebase';
-import {Avatar, AvatarFallback, AvatarImage} from './ui/avatar';
 import {Sheet, SheetContent, SheetHeader, SheetTitle} from './ui/sheet';
+import {useAuth} from '@/contexts/AuthContext';
 
-interface UserData {
-  username: string;
-  firebaseId: string;
-  email: string;
-  name: string;
-  // Add profileImageUrl if you have it
-}
+// interface UserData {
+//   username: string;
+//   firebaseId: string;
+//   email: string;
+//   name: string;
+// }
 
 function Navbar() {
   const {theme, setTheme} = useTheme();
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const {userData} = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const res = await fetch('/api/auth/get-username', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({firebaseId: user.uid})
-        });
-
-        const data = await res.json();
-        if (res.ok) {
-          setUserData(data);
-        } else {
-          console.error('Error fetching user:', data.error);
-        }
-      } else {
-        setUserData(null);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
 
   return (
     <header className="bg-background mx-auto border-b border-border sticky top-0 z-50">
@@ -100,7 +76,6 @@ function Navbar() {
                 <DropdownMenuItem
                   onClick={async () => {
                     await signOut(auth);
-                    setUserData(null);
                     window.location.href = '/';
                   }}
                 >
@@ -173,7 +148,6 @@ function Navbar() {
                   className="flex items-center gap-3 justify-start"
                   onClick={async () => {
                     await signOut(auth);
-                    setUserData(null);
                     setIsMobileMenuOpen(false);
                     window.location.href = '/';
                   }}
