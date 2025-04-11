@@ -1,14 +1,15 @@
 'use client';
 
-import {Calendar} from 'lucide-react';
-import {Badge} from '@/components/ui/badge';
+import { Calendar } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 type Task = {
   id: string;
@@ -22,7 +23,7 @@ type TasksProps = {
   tasks: Task[];
 };
 
-const Tasks: React.FC<TasksProps> = ({tasks}) => {
+const Tasks: React.FC<TasksProps> = ({ tasks }) => {
   if (!tasks || tasks.length === 0) {
     return (
       <Card className="w-full border-dashed bg-muted/20">
@@ -33,16 +34,14 @@ const Tasks: React.FC<TasksProps> = ({tasks}) => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">
-            Create a new task or wait for one to be added.
-          </p>
+          Create a new task or wait for one to be added.
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <div className="space-y-4 w-full">
+    <ScrollArea className="h-full w-full space-y-4">
       {tasks.map((task) => {
         const createdDate = new Date(task.createdAt).toLocaleDateString();
 
@@ -53,7 +52,16 @@ const Tasks: React.FC<TasksProps> = ({tasks}) => {
                 <CardTitle className="text-base font-semibold">
                   {task.title}
                 </CardTitle>
-                <Badge variant="secondary" className="text-xs uppercase">
+                <Badge
+                  variant={
+                    task.status === 'COMPLETED'
+                      ? 'default'
+                      : task.status === 'FAILED'
+                        ? 'destructive'
+                        : 'secondary'
+                  }
+                  className="text-xs uppercase"
+                >
                   {task.status}
                 </Badge>
               </div>
@@ -66,13 +74,15 @@ const Tasks: React.FC<TasksProps> = ({tasks}) => {
               </div>
 
               {task.description && (
-                <p className="text-sm text-foreground">{task.description}</p>
+                <span>
+                  {task.description}
+                </span>
               )}
             </CardContent>
           </Card>
         );
       })}
-    </div>
+    </ScrollArea>
   );
 };
 

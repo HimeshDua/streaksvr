@@ -1,4 +1,8 @@
+'use client';
+
 import Tasks from '@/components/Tasks';
+import { useAuth } from '@/contexts/AuthContext';
+import { useEffect, useState } from 'react';
 
 type Task = {
   id: string;
@@ -8,85 +12,32 @@ type Task = {
   createdAt: string;
 };
 
-const dummyTasks: Task[] = [
-  {
-    id: '1',
-    title: 'Design UI for Dashboard',
-    description:
-      'Create wireframes and high-fidelity mockups for the main dashboard view.',
-    createdAt: '2024-07-28T10:00:00Z',
-    status: 'PENDING'
-  },
-  {
-    id: '2',
-    title: 'Implement User Authentication',
-    description: 'Set up Firebase authentication for sign-in/sign-up.',
-    createdAt: '2024-07-27T14:30:00Z',
-    status: 'COMPLETED'
-  },
-  {
-    id: '3',
-    title: 'Write API Endpoints',
-    description: 'Develop RESTful APIs for task CRUD operations.',
-    createdAt: '2024-07-26T09:00:00Z',
-    status: 'PENDING'
-  },
-  {
-    id: '4',
-    title: 'Create Task List',
-    description: 'Build a component to display a task list.',
-    createdAt: '2024-07-25T11:15:00Z',
-    status: 'COMPLETED'
-  },
-  {
-    id: '5',
-    title: 'Database Connection',
-    description: 'Configure Prisma with PostgreSQL.',
-    createdAt: '2024-07-24T16:45:00Z',
-    status: 'PENDING'
-  },
-  {
-    id: '6',
-    title: 'Unit Tests',
-    description: 'Add unit tests for task functions.',
-    createdAt: '2024-07-28T08:00:00Z',
-    status: 'FAILED'
-  },
-  {
-    id: '7',
-    title: 'Deploy App',
-    description: 'Deploy the app to production.',
-    createdAt: '2024-07-29T13:00:00Z',
-    status: 'PENDING'
-  },
-  {
-    id: '8',
-    title: 'Fix Bug in Login',
-    description: 'Fix bug preventing Google sign-in.',
-    createdAt: '2024-08-02T09:30:00Z',
-    status: 'PENDING'
-  },
-  {
-    id: '9',
-    title: 'Add Search Functionality',
-    description: 'Implement search in task list view.',
-    createdAt: '2024-08-05T15:00:00Z',
-    status: 'COMPLETED'
-  },
-  {
-    id: '10',
-    title: 'Update Documentation',
-    description: 'Update docs to reflect recent changes.',
-    createdAt: '2024-08-07T11:00:00Z',
-    status: 'PENDING'
-  }
-];
-
 export default function TasksPage() {
+  const [tasksArr, setTasksArr] = useState<Task[]>([]);
+  const { userData } = useAuth();
+  const authorId = userData?.id;
+
+  useEffect(() => {
+    async function getAllTasks() {
+      if (authorId) {
+        const response = await fetch('/api/tasks/get', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ authorId }),
+        });
+        if (response.ok) {
+          const tasks = await response.json();
+          setTasksArr(tasks);
+        } else {
+          console.error('Failed to fetch tasks:', response.status);
+        }
+      }
+    }
+
+    getAllTasks();
+  }, [authorId]);
+
   return (
-    <div className="p-6 max-w-4xl mx-auto h-screen max-h-screen overflow-y-scroll">
-      {/* <h1>Tasks</h1> */}
-      <Tasks tasks={dummyTasks} />
-    </div>
+    <div><Tasks tasks={tasksArr} /></div>
   );
 }

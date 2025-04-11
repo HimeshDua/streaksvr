@@ -1,25 +1,38 @@
 import {prisma} from '@/lib/prisma';
 import {NextResponse} from 'next/server';
+import {z} from 'zod';
 
-interface taskBody {
-  title: string;
-  description: string;
-  authorId: string;
-}
+const taskSchema = z.object({
+  title: z.string().min(1).max(255),
+  description: z.string().optional(),
+  authorId: z.string().min(1)
+});
+
 async function POST(req: Request) {
-  const body: taskBody = await req.json();
-  const {title, description, authorId} = body;
-
-  if (!authorId) {
-    return NextResponse.json(
-      {error: 'User not authenticated or server error'},
-      {status: 501}
-    );
-  }
-  if (!title || !description) {
-    return NextResponse.json({error: 'both fields is required'}, {status: 400});
-  }
   try {
+    const body = await req.json();
+    const validatedData = taskSchema.safeParse(body);
+
+    if (!validatedData.success) {
+      return NextResponse.json(
+        {error: 'Invalid input', details: validatedData.error.issues},
+        {status: 400}
+      );
+    }
+
+    const {title, description, authorId} = validatedData.data;
+
+    const existingUser = await prisma.user.findUnique({
+      where: {id: authorId}
+    });
+
+    if (!existingUser) {
+      return NextResponse.json(
+        {error: `User with ID "${authorId}" not found`},
+        {status: 404}
+      );
+    }
+
     const newTask = await prisma.task.create({
       data: {
         title,
@@ -29,10 +42,13 @@ async function POST(req: Request) {
       }
     });
 
-    return NextResponse.json(newTask, {status: 200});
-  } catch (error) {
-    console.error('Error creating task: ', error);
-    return NextResponse.json({error: 'Failed to create task'}, {status: 500});
+    return NextResponse.json(newTask, {status: 201});
+  } catch (error: any) {
+    console.error('Error creating task:', error);
+    return NextResponse.json(
+      {error: 'Failed to create task', details: error.message},
+      {status: 500}
+    );
   }
 }
 
