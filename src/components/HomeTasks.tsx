@@ -50,7 +50,7 @@ export default function HomeTasksSection() {
                     <div className="text-sm font-medium text-foreground">{task.title}</div>
 
                     <div className="text-xs text-muted-foreground mt-2">
-                        Since: {formatTimeDifferencecha(task.updatedAt)}
+                        Since: {formatTimeDifference(task.updatedAt)}
                     </div>
 
                     {/* <div className="text-xs text-muted-foreground mt-1">
