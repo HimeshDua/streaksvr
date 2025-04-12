@@ -2,25 +2,21 @@ import {prisma} from '@/lib/prisma';
 import {NextResponse} from 'next/server';
 import {z} from 'zod';
 
-const taskSchema = z.object({
-  title: z.string().min(1).max(255),
-  description: z.string().optional(),
-  authorId: z.string().min(1)
-});
-
 async function POST(req: Request) {
   try {
     const body = await req.json();
-    const validatedData = taskSchema.safeParse(body);
+    console.log('Request Body:', body);
 
-    if (!validatedData.success) {
-      return NextResponse.json(
-        {error: 'Invalid input', details: validatedData.error.issues},
-        {status: 400}
-      );
-    }
-
-    const {title, description, authorId} = validatedData.data;
+    const {
+      title,
+      description,
+      authorId,
+      status,
+      isCompleted,
+      dueDate,
+      priority,
+      category
+    } = body;
 
     const existingUser = await prisma.user.findUnique({
       where: {id: authorId}
@@ -38,7 +34,11 @@ async function POST(req: Request) {
         title,
         description,
         authorId,
-        status: 'PENDING'
+        status,
+        isCompleted: isCompleted || false,
+        dueDate: dueDate ? new Date(dueDate) : null,
+        priority: priority || 'MEDIUM',
+        category: category || 'WORK'
       }
     });
 

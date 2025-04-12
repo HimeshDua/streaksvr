@@ -13,10 +13,42 @@ import { useAuth } from './AuthContext';
 type Task = {
   id: string;
   title: string;
-  description?: string;
+  description?: string | null;
   status: 'COMPLETED' | 'PENDING' | 'FAILED';
+  isCompleted: boolean;
+  dueDate?: string | null;
+  priority: 'LOW' | 'MEDIUM' | 'HIGH';
+  category:
+  | 'WORK'
+  | 'PERSONAL'
+  | 'LEARNING'
+  | 'HEALTH'
+  | 'FITNESS'
+  | 'SOCIAL'
+  | 'FAMILY'
+  | 'STUDY'
+  | 'PROJECT'
+  | 'SIDE_HUSTLE'
+  | 'FREELANCE'
+  | 'CODING'
+  | 'WRITING'
+  | 'READING'
+  | 'WATCHLIST'
+  | 'SHOPPING'
+  | 'GOALS'
+  | 'HABITS'
+  | 'SPIRITUAL'
+  | 'JOURNAL'
+  | 'BILLS'
+  | 'TRAVEL'
+  | 'EVENTS'
+  | 'MEETINGS'
+  | 'DEADLINES'
+  | 'OTHERS';
   createdAt: string;
   updatedAt: string;
+  authorId: string;
+  comments: any[]; // Assuming Comment type is available
 };
 
 type TasksContextType = {

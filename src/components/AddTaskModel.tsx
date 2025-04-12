@@ -1,17 +1,42 @@
 'use client';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ListChecks, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTasks } from "@/contexts/TasksProvider";
 
 export default function AddTaskModal({ authorId }: { authorId: string }) {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [open, setOpen] = useState(false);
+    const [category, setCategory] = useState("WORK");
+    const [priority, setPriority] = useState("MEDIUM");
+    const [dueDate, setDueDate] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [open, setOpen] = useState(false);
     const { refetch } = useTasks();
+    const titleInputRef = useRef<HTMLInputElement>(null);
+    const status = "PENDING";
+    const isCompleted = false;
+
+    useEffect(() => {
+        if (open && titleInputRef.current) {
+            titleInputRef.current.focus();
+        } else {
+            // Reset on modal close
+            setTitle("");
+            setDescription("");
+            setCategory("WORK");
+            setPriority("MEDIUM");
+            setDueDate("");
+        }
+    }, [open]);
 
     async function handleTaskSubmit(e: any) {
         e.preventDefault();
@@ -20,16 +45,33 @@ export default function AddTaskModal({ authorId }: { authorId: string }) {
             const res = await fetch("/api/tasks/add", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ title, description, authorId }),
+                body: JSON.stringify({
+                    title,
+                    description,
+                    status,       // "PENDING" (hardcoded)
+                    isCompleted,  // false (hardcoded)
+                    category,     // State variable
+                    priority,     // State variable
+                    dueDate,      // State variable (string from date input)
+                    authorId,     // Prop passed to the component
+                }),
+                // body: JSON.stringify({
+                //     title,
+                //     description,
+                //     status,
+                //     isCompleted,
+                //     category,
+                //     priority,
+                //     dueDate,
+                //     authorId,
+                // }),
             });
 
             if (!res.ok) throw new Error("Failed to submit task");
 
-            setTitle("");
-            setDescription("");
             await refetch();
             setOpen(false);
-        } catch (error: any) {
+        } catch (error) {
             console.error("Error submitting task:", error);
         } finally {
             setIsLoading(false);
@@ -47,11 +89,14 @@ export default function AddTaskModal({ authorId }: { authorId: string }) {
 
             <DialogContent className="bg-card text-card-foreground p-6 rounded-xl border border-border">
                 <DialogHeader>
-                    <DialogTitle className="text-xl font-semibold text-foreground">Create a new task</DialogTitle>
+                    <DialogTitle className="text-xl font-semibold text-foreground">
+                        Create a new task
+                    </DialogTitle>
                 </DialogHeader>
 
                 <form onSubmit={handleTaskSubmit} className="space-y-4">
                     <input
+                        ref={titleInputRef}
                         type="text"
                         placeholder="Task title"
                         className="w-full rounded-md border border-border bg-input p-3 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
@@ -59,6 +104,7 @@ export default function AddTaskModal({ authorId }: { authorId: string }) {
                         onChange={(e) => setTitle(e.target.value)}
                         required
                     />
+
                     <textarea
                         placeholder="Description (optional)"
                         className="w-full rounded-md border border-border bg-input p-3 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
@@ -66,6 +112,39 @@ export default function AddTaskModal({ authorId }: { authorId: string }) {
                         onChange={(e) => setDescription(e.target.value)}
                         rows={3}
                     />
+
+                    <div className="flex gap-4">
+                        <select
+                            className="flex-1 rounded-md border border-border bg-input p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                            value={category}
+                            onChange={(e) => setCategory(e.target.value)}
+                        >
+                            <option value="WORK">Work</option>
+                            <option value="PERSONAL">Personal</option>
+                            <option value="LEARNING">Learning</option>
+                            <option value="HEALTH">Health</option>
+                            <option value="HABIT">Habit</option>
+                            <option value="PROJECT">Project</option>
+                        </select>
+
+                        <select
+                            className="flex-1 rounded-md border border-border bg-input p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                            value={priority}
+                            onChange={(e) => setPriority(e.target.value)}
+                        >
+                            <option value="LOW">Low</option>
+                            <option value="MEDIUM">Medium</option>
+                            <option value="HIGH">High</option>
+                        </select>
+                    </div>
+
+                    <input
+                        type="date"
+                        className="w-full rounded-md border border-border bg-input p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                        value={dueDate}
+                        onChange={(e) => setDueDate(e.target.value)}
+                    />
+
                     <Button type="submit" disabled={isLoading} className="w-full">
                         {isLoading ? (
                             <span className="flex items-center justify-center gap-2">

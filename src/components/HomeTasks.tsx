@@ -6,12 +6,43 @@ import formatTimeDifference from "@/hooks/formatTimeDifference";
 type Task = {
     id: string;
     title: string;
-    description?: string;
+    description?: string | null;
     status: 'COMPLETED' | 'PENDING' | 'FAILED';
+    isCompleted: boolean;
+    dueDate?: string | null;
+    priority: 'LOW' | 'MEDIUM' | 'HIGH';
+    category:
+    | 'WORK'
+    | 'PERSONAL'
+    | 'LEARNING'
+    | 'HEALTH'
+    | 'FITNESS'
+    | 'SOCIAL'
+    | 'FAMILY'
+    | 'STUDY'
+    | 'PROJECT'
+    | 'SIDE_HUSTLE'
+    | 'FREELANCE'
+    | 'CODING'
+    | 'WRITING'
+    | 'READING'
+    | 'WATCHLIST'
+    | 'SHOPPING'
+    | 'GOALS'
+    | 'HABITS'
+    | 'SPIRITUAL'
+    | 'JOURNAL'
+    | 'BILLS'
+    | 'TRAVEL'
+    | 'EVENTS'
+    | 'MEETINGS'
+    | 'DEADLINES'
+    | 'OTHERS';
     createdAt: string;
     updatedAt: string;
+    authorId: string;
+    comments: any[]; // Assuming Comment type is available
 };
-
 
 export default function HomeTasksSection() {
     const { tasks, loading: tasksLoading } = useTasks();
@@ -50,27 +81,31 @@ export default function HomeTasksSection() {
                 </div>
             )}
 
-
             {pendingTasks?.map((task) => (
                 <div
                     key={task.id}
-                    className="group grid grid-cols-2 border backdrop-blur-md px-3 py-2 rounded-md transition-all"
+                    className="group flex flex-col gap-1 border backdrop-blur-md px-3 py-2 rounded-md transition-all hover:shadow-sm"
                 >
-                    <div className="text-sm font-medium text-foreground">{task.title}</div>
-
-                    <div className="text-xs text-muted-foreground mt-2">
-                        Since: {formatTimeDifference(task.updatedAt)}
+                    <div className="flex justify-between items-center">
+                        <div className="text-sm font-medium text-foreground">{task.title}</div>
+                        <div className="text-[10px] text-muted-foreground">
+                            {formatTimeDifference(task.updatedAt)}
+                        </div>
                     </div>
 
-
-                    <div className={"mt-1 text-xs text-muted-foreground max-h-0 opacity-0 overflow-hidden group-hover:max-h-40 group-hover:opacity-100 transition-all duration-300 ease-in-out"}>
-                        {task.description || <span className="text-red-600">no description</span>}
+                    <div
+                        className="text-xs text-muted-foreground max-h-0 opacity-0 overflow-hidden group-hover:max-h-40 group-hover:opacity-100 transition-all duration-300 ease-in-out"
+                    >
+                        {task.description || (
+                            <span className="text-red-500 italic">No description provided.</span>
+                        )}
+                        <br />
+                        {task.category || (
+                            <span className="text-red-500 italic">No category provided.</span>
+                        )}
                     </div>
-
                 </div>
             ))}
-
-
         </div>
     );
 }

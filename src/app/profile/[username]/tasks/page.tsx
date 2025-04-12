@@ -2,10 +2,10 @@
 
 import Tasks from '@/components/Tasks';
 import { useAuth } from '@/contexts/AuthContext';
-import useTasks from '@/contexts/TasksContext';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useTasks } from '@/contexts/TasksProvider';
 
 const TaskSkeleton = () => (
   <div className="space-y-4 w-full relative">
@@ -27,7 +27,7 @@ const TaskSkeleton = () => (
 
 export default function TasksPage() {
   const { userData, loading: authLoading, error: authError } = useAuth();
-  const { tasks, loading: tasksLoading, error: tasksError } = useTasks();
+  const { tasks, loading: tasksLoading } = useTasks();
   const router = useRouter();
 
   useEffect(() => {
@@ -46,10 +46,6 @@ export default function TasksPage() {
 
   if (tasksLoading) {
     return (<div className='p-4'><TaskSkeleton /></div>);
-  }
-
-  if (tasksError) {
-    return <div>Error loading tasks: {tasksError}</div>;
   }
 
   return (
