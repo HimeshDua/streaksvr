@@ -31,7 +31,7 @@ export default function UserProfile() {
   }
 
   return (
-    <div className="flex justify-center p-8">
+    <div className="flex justify-center relative p-8">
       <ProfileInfo
         user={{
           name: userData.name,

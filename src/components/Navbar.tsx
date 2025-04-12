@@ -9,7 +9,7 @@ import {
   SunIcon,
   UserIcon
 } from 'lucide-react';
-import {Button} from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,12 +17,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import {signOut} from 'firebase/auth';
-import {auth} from '@/lib/firebase';
-import {Sheet, SheetContent, SheetHeader, SheetTitle} from './ui/sheet';
-import {useAuth} from '@/contexts/AuthContext';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from './ui/sheet';
+import { useAuth } from '@/contexts/AuthContext';
 
 // interface UserData {
 //   username: string;
@@ -32,11 +32,11 @@ import {useAuth} from '@/contexts/AuthContext';
 // }
 
 function Navbar() {
-  const {userData} = useAuth();
+  const { userData } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="bg-background mx-auto border-b border-border sticky top-0 z-50">
+    <header className="backdrop-blur-2xl mx-auto border-b border-border sticky top-0 z-50">
       <div className="container flex items-center mx-auto justify-between h-16 px-4">
         {/* Logo / Title */}
         <Link href="/" className="font-bold text-lg">

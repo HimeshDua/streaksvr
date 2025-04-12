@@ -36,7 +36,7 @@ const Tasks: React.FC<TasksProps> = ({ tasks }) => {
         return (
           <div
             key={task.id}
-            className="w-full rounded-sm p-4 mb-3 bg-card border border-border shadow-md transition-colors hover:bg-muted/40"
+            className="w-full rounded-sm p-4 mb-3 bg-card/30 border border-border shadow-md transition-colors  backdrop-blur-md hover:bg-card/60 "
           >
             <div className="flex items-start justify-between mb-2">
               <h3 className="text-sm font-semibold text-foreground">{task.title}</h3>

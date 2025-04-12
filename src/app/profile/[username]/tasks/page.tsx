@@ -8,16 +8,17 @@ import { useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const TaskSkeleton = () => (
-  <div className="space-y-4 w-full">
-    {Array.from({ length: 3 }).map((_, i) => (
-      <div key={i} className="w-full border rounded-md p-3 shadow-sm">
+  <div className="space-y-4 w-full relative">
+
+    {Array.from({ length: 5 }).map((_, i) => (
+      <div key={i} className="w-full border backdrop-blur-2xl rounded-md p-3 shadow-sm">
         <div className="flex justify-between items-start mb-2">
-          <Skeleton className="h-5 w-2/3" />
-          <Skeleton className="h-5 w-10" />
+          <Skeleton className="h-5.5 w-2/3" />
+          <Skeleton className="h-5.5 w-10" />
         </div>
         <div className="space-y-2 mt-2">
-          <Skeleton className="h-4 w-1/3" />
-          <Skeleton className="h-4 w-3/4" />
+          <Skeleton className="h-5 w-1/3" />
+          <Skeleton className="h-5 w-3/4" />
         </div>
       </div>
     ))}
@@ -52,6 +53,7 @@ export default function TasksPage() {
   }
 
   return (
-    <div className='p-4'><Tasks tasks={tasks} /></div>
+    <div className='p-4 relative'>
+      <Tasks tasks={tasks} /></div>
   );
 }

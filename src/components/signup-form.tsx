@@ -1,7 +1,7 @@
 'use client';
 
-import {cn} from '@/lib/utils';
-import {Button} from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -9,12 +9,12 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import {Input} from '@/components/ui/input';
-import {Label} from '@/components/ui/label';
-import {useEffect, useState} from 'react';
-import {useRouter} from 'next/navigation';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import {EyeIcon, EyeOffIcon} from 'lucide-react';
+import { EyeIcon, EyeOffIcon } from 'lucide-react';
 
 export default function SignupForm({
   className,
@@ -92,7 +92,7 @@ export default function SignupForm({
 
   return (
     <div className={cn('', className)} {...props}>
-      <Card className=" shadow-md">
+      <Card className="shadow-md">
         <CardHeader>
           <CardTitle className="text-2xl">Sign Up</CardTitle>
           <CardDescription className="text-muted-foreground">

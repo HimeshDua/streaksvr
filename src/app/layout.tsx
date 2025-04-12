@@ -1,8 +1,8 @@
 // layout.tsx
-import type {Metadata} from 'next';
-import {Geist, Geist_Mono} from 'next/font/google';
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import {AuthProvider} from '@/contexts/AuthContext';
+import { AuthProvider } from '@/contexts/AuthContext';
 import PageShell from '@/components/PageShell';
 
 const geistSans = Geist({

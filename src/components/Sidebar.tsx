@@ -9,19 +9,19 @@ import {
   MenuIcon,
   User
 } from 'lucide-react';
-import {usePathname} from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import {useCallback} from 'react';
-import {signOut} from 'firebase/auth';
-import {auth} from '@/lib/firebase';
+import { useCallback } from 'react';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 
-import {Sheet, SheetTrigger, SheetContent} from '@/components/ui/sheet';
-import {ScrollArea} from '@/components/ui/scroll-area';
-import {Separator} from '@/components/ui/separator';
-import {Button} from '@/components/ui/button';
+import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/ui/button';
 import GithubIcon from './GithubIcon';
 import React from 'react';
-import {useAuth} from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface NavItem {
   label: string;
@@ -32,10 +32,10 @@ interface NavItem {
 
 const Sidebar = React.memo(function Sidebar() {
   const pathname = usePathname();
-  const {userData, loading, error} = useAuth();
+  const { userData, loading, error } = useAuth();
 
   const navItems: NavItem[] = [
-    {label: 'Home', href: '/', icon: <HomeIcon className="h-5 w-5" />},
+    { label: 'Home', href: '/', icon: <HomeIcon className="h-5 w-5" /> },
     {
       label: 'Profile',
       href: `/profile/${userData?.username}`,
@@ -67,7 +67,7 @@ const Sidebar = React.memo(function Sidebar() {
   const renderNav = useCallback(
     () => (
       <nav className="flex flex-col space-y-1">
-        {navItems.map(({label, href, icon, external}) => {
+        {navItems.map(({ label, href, icon, external }) => {
           const isActive = pathname === href;
           return (
             <Button
@@ -75,11 +75,10 @@ const Sidebar = React.memo(function Sidebar() {
               variant="ghost"
               size="sm"
               asChild
-              className={`justify-start w-full ${
-                isActive
-                  ? 'bg-accent text-accent-foreground'
-                  : 'hover:bg-accent hover:text-accent-foreground'
-              }`}
+              className={`justify-start w-full ${isActive
+                ? 'bg-accent text-accent-foreground'
+                : 'hover:bg-accent hover:text-accent-foreground'
+                }`}
             >
               <Link
                 href={href}
@@ -172,7 +171,7 @@ const Sidebar = React.memo(function Sidebar() {
       </Sheet>
 
       {/* Desktop: Static sidebar */}
-      <aside className="hidden md:flex flex-col w-80 h-screen border-r border-border bg-background text-foreground">
+      <aside className="hidden md:flex flex-col w-80 h-screen border-r border-border backdrop-blur-md text-foreground">
         <ScrollArea className="flex-1 p-4 flex flex-col">
           <div className="mb-6">{userSectionContent}</div>
           <Separator />
