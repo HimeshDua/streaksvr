@@ -1,3 +1,4 @@
+"use client"
 import { useAuth } from "@/contexts/AuthContext";
 import { ListChecks, PlusCircle } from "lucide-react"
 import Link from "next/link"

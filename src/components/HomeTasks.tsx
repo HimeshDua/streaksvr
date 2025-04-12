@@ -53,13 +53,9 @@ export default function HomeTasksSection() {
                         Since: {formatTimeDifference(task.updatedAt)}
                     </div>
 
-                    {/* <div className="text-xs text-muted-foreground mt-1">
-                        {task.status}
-                    </div> */}
 
                     <div className={"mt-1 text-xs text-muted-foreground max-h-0 opacity-0 overflow-hidden group-hover:max-h-40 group-hover:opacity-100 transition-all duration-300 ease-in-out"}>
-                        {task.description || <span className="text-red-600">no description</span>
-                        }
+                        {task.description || <span className="text-red-600">no description</span>}
                     </div>
 
                 </div>

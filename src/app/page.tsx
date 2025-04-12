@@ -1,7 +1,4 @@
-'use client';
 
-import Link from 'next/link';
-import { PlusCircle, ListChecks } from 'lucide-react';
 import HomeTasksSection from '@/components/HomeTasks';
 import HomeProfileMenu from '@/components/HomeProfileMenu';
 import HomeButtons from '@/components/HomeButtons';
@@ -16,7 +13,6 @@ export default function HomePage() {
       <main className="px-4 sm:px-6 lg:px-8 py-8">
         <div className="max-w-3xl mx-auto space-y-6">
 
-          {/* 💥 BRANDING */}
           <div className="text-center">
             <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight text-primary drop-shadow-md">
               Streaksvr
