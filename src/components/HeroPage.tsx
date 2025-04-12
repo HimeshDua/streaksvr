@@ -1,7 +1,7 @@
 'use client';
 
-import {ArrowUpRight} from 'lucide-react';
-import {Button} from '@/components/ui/button';
+import { ArrowUpRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface HeroPageProps {
   heading?: string;
@@ -35,7 +35,7 @@ const HeroPage = ({
   }
 }: HeroPageProps) => {
   return (
-    <section className="py-16 md:py-24 pl-0 md:pl-[80px]">
+    <section className="py-16 mx-auto md:py-24 ">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center lg:items-start gap-12 px-4 sm:px-6 lg:px-8">
         {/* Text */}
         <div className="flex-1 flex flex-col gap-6">
@@ -75,4 +75,4 @@ const HeroPage = ({
   );
 };
 
-export {HeroPage};
+export { HeroPage };

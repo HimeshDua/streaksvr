@@ -10,6 +10,7 @@ type Task = {
   description?: string;
   status: 'COMPLETED' | 'PENDING' | 'FAILED';
   createdAt: string;
+  updatedAt: string;
 };
 
 function useTasks() {
@@ -18,38 +19,38 @@ function useTasks() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    async function fetchTasks() {
-      if (userData?.id) {
-        setLoading(true);
-        setError(null);
-        try {
-          const response = await fetch('/api/tasks/get', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({authorId: userData.id})
-          });
-          if (response.ok) {
-            const tasksData = await response.json();
-            setTasks(tasksData);
-          } else {
-            setError(`Failed to fetch tasks: ${response.status}`);
-          }
-        } catch (err: any) {
-          setError(`Error fetching tasks: ${err.message}`);
-        } finally {
-          setLoading(false);
+  async function fetchTasks() {
+    if (userData?.id) {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch('/api/tasks/get', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({authorId: userData.id})
+        });
+        if (response.ok) {
+          const tasksData = await response.json();
+          setTasks(tasksData);
+        } else {
+          setError(`Failed to fetch tasks: ${response.status}`);
         }
-      } else {
-        setTasks([]);
+      } catch (err: any) {
+        setError(`Error fetching tasks: ${err.message}`);
+      } finally {
         setLoading(false);
       }
+    } else {
+      setTasks([]);
+      setLoading(false);
     }
+  }
 
+  useEffect(() => {
     fetchTasks();
   }, [userData?.id]);
 
-  return {tasks, loading, error, setTasks};
+  return {tasks, loading, error, setTasks, refetch: fetchTasks};
 }
 
 export default useTasks;
