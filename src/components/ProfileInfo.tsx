@@ -31,7 +31,8 @@ const ProfileInfo = ({ user }: ProfileInfoProps) => {
   });
 
   return (
-    <div className=" border border-border backdrop-blur-md rounded-2xl bg-card/40 p-6 w-full max-w-md shadow-lg">
+
+    <div className=" border border-border rounded-2xl bg-card/40 p-6 w-full max-w-md shadow-lg">
       <div className="flex items-center space-x-4 mb-6">
         <Avatar className="h-16 w-16 rounded-xl">
           <AvatarImage src={undefined} alt={user.name} />

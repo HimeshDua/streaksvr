@@ -170,8 +170,10 @@ const Sidebar = React.memo(function Sidebar() {
         </SheetContent>
       </Sheet>
 
+
+
       {/* Desktop: Static sidebar */}
-      <aside className="hidden md:flex flex-col w-80 h-screen border-r border-border backdrop-blur-md text-foreground">
+      <aside className="hidden md:flex flex-col w-80 h-screen border-r border-border text-foreground">
         <ScrollArea className="flex-1 p-4 flex flex-col">
           <div className="mb-6">{userSectionContent}</div>
           <Separator />
