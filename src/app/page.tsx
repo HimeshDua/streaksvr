@@ -7,9 +7,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-background py-10">
-      <header className="px-4 sm:px-6 lg:px-8 flex justify-end items-center py-4">
-        <HomeProfileMenu />
-      </header>
+      {/* <header className="px-4 sm:px-6 lg:px-8 flex justify-end items-center py-4">
+      </header> */}
       <main className="px-4 sm:px-6 lg:px-8 py-8">
         <div className="max-w-3xl mx-auto space-y-6">
 
@@ -23,6 +22,7 @@ export default function HomePage() {
           </div>
 
           <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            {/* <HomeProfileMenu /> */}
             Track Your Progress
           </h1>
 

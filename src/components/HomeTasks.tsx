@@ -1,12 +1,21 @@
 'use client';
-import useTasks from "@/contexts/TasksContext";
+import { useTasks } from "@/contexts/TasksProvider";
 import { Skeleton } from "./ui/skeleton";
 import formatTimeDifference from "@/hooks/formatTimeDifference";
 
+type Task = {
+    id: string;
+    title: string;
+    description?: string;
+    status: 'COMPLETED' | 'PENDING' | 'FAILED';
+    createdAt: string;
+    updatedAt: string;
+};
+
+
 export default function HomeTasksSection() {
     const { tasks, loading: tasksLoading } = useTasks();
-
-    const pendingTasks = tasks?.filter((task) => task.status === "PENDING");
+    const pendingTasks: Task[] = tasks?.filter((task) => task.status === "PENDING");
 
     const TaskSkeleton = () => (
         <div className="space-y-4 w-full relative">
