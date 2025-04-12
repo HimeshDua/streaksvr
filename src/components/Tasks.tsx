@@ -2,13 +2,6 @@
 
 import { Calendar } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 type Task = {
@@ -26,60 +19,54 @@ type TasksProps = {
 const Tasks: React.FC<TasksProps> = ({ tasks }) => {
   if (!tasks || tasks.length === 0) {
     return (
-      <Card className="w-full border-dashed bg-muted/20">
-        <CardHeader>
-          <CardTitle className="text-lg">No Tasks</CardTitle>
-          <CardDescription className="text-muted-foreground">
-            There are no tasks to display.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+      <div className="w-full p-4 mx-2 rounded-md border-dashed bg-muted/20">
+        <h3 className="text-sm font-medium">No Tasks</h3>
+        <p className="text-sm text-muted-foreground mt-1">
           Create a new task or wait for one to be added.
-        </CardContent>
-      </Card>
+        </p>
+      </div>
     );
   }
 
   return (
-    <ScrollArea className="h-full w-full space-y-4">
+    <ScrollArea className="w-full space-y-2 pr-2">
       {tasks.map((task) => {
         const createdDate = new Date(task.createdAt).toLocaleDateString();
 
         return (
-          <Card key={task.id} className="w-full border bg-card shadow-sm">
-            <CardHeader>
-              <div className="flex justify-between items-start">
-                <CardTitle className="text-base font-semibold">
-                  {task.title}
-                </CardTitle>
-                <Badge
-                  variant={
-                    task.status === 'COMPLETED'
-                      ? 'default'
-                      : task.status === 'FAILED'
-                        ? 'destructive'
-                        : 'secondary'
-                  }
-                  className="text-xs uppercase"
-                >
-                  {task.status}
-                </Badge>
-              </div>
-            </CardHeader>
+          <div
+            key={task.id}
+            className="w-full rounded-sm p-4 mb-3 bg-card border border-border shadow-md transition-colors hover:bg-muted/40"
+          >
+            <div className="flex items-start justify-between mb-2">
+              <h3 className="text-sm font-semibold text-foreground">{task.title}</h3>
 
-            <CardContent className="space-y-2">
-              <div className="text-sm text-muted-foreground flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
-                <span>Created: {createdDate}</span>
-              </div>
+              <Badge
+                variant={
+                  task.status === 'COMPLETED'
+                    ? 'default'
+                    : task.status === 'FAILED'
+                      ? 'destructive'
+                      : 'secondary'
+                }
+                className="text-[10px] px-2 py-0.5 uppercase tracking-wide rounded-full"
+              >
+                {task.status}
+              </Badge>
+            </div>
 
-              {task.description && (
-                <span>
-                  {task.description}
-                </span>
-              )}
-            </CardContent>
-          </Card>
+            <div className="flex items-center gap-1 text-xs text-muted-foreground/80 mb-1">
+              <Calendar className="h-3 w-3 opacity-80" />
+              <span>{createdDate}</span>
+            </div>
+
+            {task.description && (
+              <p className="text-xs text-muted-foreground/90 leading-snug">
+                {task.description}
+              </p>
+            )}
+          </div>
+
         );
       })}
     </ScrollArea>

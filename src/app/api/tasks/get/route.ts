@@ -14,9 +14,12 @@ async function POST(req: Request) {
       );
     }
 
-    const userAllTasks = await prisma.task.findMany({where: {authorId}});
+    const userAllTasks = await prisma.task.findMany({
+      where: {authorId},
+      orderBy: {createdAt: 'desc'}
+    });
 
-    return NextResponse.json(userAllTasks, {status: 201});
+    return NextResponse.json(userAllTasks, {status: 200});
   } catch (error: any) {
     console.error('Error fetching task:', error);
     return NextResponse.json(

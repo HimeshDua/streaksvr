@@ -61,36 +61,49 @@ function AddTask() {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900">
-      <Card className="w-full max-w-md">
+    <div className="flex items-center justify-center h-screen bg-background dark:bg-muted">
+      <Card className="w-full max-w-md rounded-2xl p-6 shadow-lg border border-border bg-background">
         <CardHeader>
-          <CardTitle>Add New Task</CardTitle>
+          <CardTitle className="text-xl font-semibold text-foreground">
+            Add New Task
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid gap-2">
-              <Label htmlFor="title">Title</Label>
+              <Label htmlFor="title" className="text-sm font-medium text-muted-foreground/80">
+                Title
+              </Label>
               <Input
                 id="title"
                 {...register('title', { required: 'Title is required' })}
                 placeholder="Enter task title"
+                className="rounded-lg border border-muted bg-background text-foreground"
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description" className="text-sm font-medium text-muted-foreground/80">
+                Description
+              </Label>
               <Input
                 id="description"
                 {...register('description')}
                 placeholder="Enter task description (optional)"
+                className="rounded-lg border border-muted bg-background text-foreground"
               />
             </div>
-            <Button type="submit" className="w-full mt-4" disabled={isSubmitting}>
+            <Button
+              type="submit"
+              className="w-full mt-4 rounded-lg text-sm"
+              disabled={isSubmitting}
+            >
               {isSubmitting ? 'Adding...' : 'Add Task'}
             </Button>
           </form>
         </CardContent>
       </Card>
     </div>
+
   );
 }
 
