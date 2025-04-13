@@ -1,7 +1,7 @@
 'use client';
 
-import {cn} from '@/lib/utils';
-import {Button} from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -9,14 +9,14 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import {Input} from '@/components/ui/input';
-import {Label} from '@/components/ui/label';
-import {useEffect, useState} from 'react';
-import {signInWithEmailAndPassword} from 'firebase/auth';
-import {auth} from '@/lib/firebase';
-import {useRouter} from 'next/navigation';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useEffect, useState } from 'react';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import {EyeIcon, EyeOffIcon} from 'lucide-react';
+import { EyeIcon, EyeOffIcon } from 'lucide-react';
 
 interface UserData {
   username: string;
@@ -57,8 +57,8 @@ export default function SigninForm({
       if (user) {
         const res = await fetch('/api/auth/signin', {
           method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({firebaseId: user.uid})
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ firebaseId: user.uid })
         });
 
         const data = await res.json();

@@ -21,7 +21,7 @@ export default function UserProfile() {
     if (!loading && userData && !userData.username) {
       notFound();
     }
-  }, [loading, userData]);
+  }, [loading, userData, router]);
 
   if (loading) {
     return <div>Loading profile...</div>;

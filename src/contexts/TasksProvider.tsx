@@ -9,7 +9,7 @@ import {
   ReactNode
 } from 'react';
 import { useAuth } from './AuthContext';
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 type Task = {
   id: string;
@@ -67,13 +67,6 @@ export function TasksProvider({ children }: { children: ReactNode }) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const router = useRouter()
-  useEffect(() => {
-    if (!userData) {
-      router.push('/signin');
-    }
-  }, [])
-
   const fetchTasks = useCallback(async () => {
     if (!userData?.id) return;
 
@@ -95,15 +88,22 @@ export function TasksProvider({ children }: { children: ReactNode }) {
   }, [userData?.id]);
 
   useEffect(() => {
-    fetchTasks();
-  }, [fetchTasks]);
+    if (userData?.id) {
+      fetchTasks();
+    }
+  }, [fetchTasks, userData?.id]);
+
+  if (!userData) {
+    return <div>Please <Link href={"/signin"}>sign in</Link> to view your tasks.</div>;
+  }
 
   return (
     <TasksContext.Provider value={{ tasks, loading, refetch: fetchTasks, setTasks }}>
       {children}
     </TasksContext.Provider>
   );
-};
+}
+
 
 export const useTasks = () => {
   const context = useContext(TasksContext);

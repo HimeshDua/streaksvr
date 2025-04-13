@@ -3,7 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { ListChecks, PlusCircle } from "lucide-react"
 import Link from "next/link"
 import AddTaskModal from "./AddTaskModel"
-import { useRouter } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 function HomeButtons() {
@@ -18,7 +18,7 @@ function HomeButtons() {
         }
 
         if (!loading && userData && !userData.username) {
-            router.push('/404'); // Assuming you have a /404 page in your app directory
+            notFound();
         }
     }, [loading, userData, router]);
 
