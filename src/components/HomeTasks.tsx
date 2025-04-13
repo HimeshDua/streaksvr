@@ -5,15 +5,26 @@ import { Skeleton } from './ui/skeleton';
 import formatTimeDifference from '@/hooks/formatTimeDifference';
 
 export default function HomeTasksSection() {
+<<<<<<< HEAD
     const { userData, loading: authLoading } = useAuth();
     const { tasks, loading: tasksLoading } = useTasks();
 
+=======
+    const { userData, loading: authLoading, error } = useAuth();
+    const { tasks, loading: tasksLoading } = useTasks();
+
+    // Show nothing until auth finishes loading
+>>>>>>> 7cdd74b457f360af58408fe08025bb0c89b18d88
     if (authLoading) {
         return (
             <div className="text-muted-foreground">Checking authentication...</div>
         );
     }
 
+<<<<<<< HEAD
+=======
+    // Show message if user is not logged in
+>>>>>>> 7cdd74b457f360af58408fe08025bb0c89b18d88
     if (!userData) {
         return (
             <div className="text-muted-foreground">
@@ -22,6 +33,10 @@ export default function HomeTasksSection() {
         );
     }
 
+<<<<<<< HEAD
+=======
+    // If tasks are still loading
+>>>>>>> 7cdd74b457f360af58408fe08025bb0c89b18d88
     if (tasksLoading) {
         return <TaskSkeleton />;
     }
