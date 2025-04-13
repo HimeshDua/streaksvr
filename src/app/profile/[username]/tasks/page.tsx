@@ -111,6 +111,7 @@ export default function TaskDetailsPage() {
     );
   }
 
+  // i think ui is good
   return (
     <div className="w-full overflow-x-auto max-w-[1200px] mx-auto max-h-[500px] p-6">
       <h1 className="text-2xl font-bold tracking-tight text-foreground mb-4" style={{ color: 'var(--foreground)' }}>
