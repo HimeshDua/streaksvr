@@ -8,16 +8,15 @@ function HomeProfileMenu() {
     const name = userData?.name;
 
     return (
-        <div>{userData?.username && (
+        <div>{userData.username ? (
             <Link href={`/profile/${username}`} className="text-sm text-muted-foreground hover:underline">
                 {name}
             </Link>
-        )}
-            {!userData?.username && (
-                <Link href="/signin" className="text-sm text-muted-foreground hover:underline">
-                    Sign In
-                </Link>
-            )}
+        ) :
+            <Link href="/signin" className="text-sm text-muted-foreground hover:underline">
+                Sign In
+            </Link>
+        }
         </div>
     )
 }

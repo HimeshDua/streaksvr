@@ -14,7 +14,7 @@ export default function HomePage() {
         <div className="max-w-3xl mx-auto space-y-6">
           <div className='flex justify-end'>
 
-            <HomeProfileMenu />
+            {/* <HomeProfileMenu /> */}
           </div>
 
           <div className="text-center">
