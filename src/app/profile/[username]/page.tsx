@@ -7,7 +7,6 @@ import { useEffect } from 'react';
 import ProfileInfo from '@/components/ProfileInfo';
 import { useTasks } from '@/contexts/TasksProvider';
 
-
 export default function UserProfile() {
 
   const { userData, loading, error } = useAuth();
@@ -22,7 +21,7 @@ export default function UserProfile() {
     if (!loading && userData && !userData.username) {
       notFound();
     }
-  }, [loading, userData, router]);
+  }, [loading, userData]);
 
   if (loading) {
     return <div>Loading profile...</div>;

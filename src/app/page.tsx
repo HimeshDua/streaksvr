@@ -14,7 +14,8 @@ export default function HomePage() {
         <div className="max-w-3xl mx-auto space-y-6">
           <div className='flex justify-end'>
 
-            <HomeProfileMenu />
+            {/* <HomeProfileMenu /> */}
+
           </div>
 
           <div className="text-center">
@@ -25,7 +26,7 @@ export default function HomePage() {
               Build streaks. Crush goals. Stay consistent.
             </p>
 
-            <UserProfile />
+            {/* <UserProfile /> */}
           </div>
 
           <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
@@ -47,7 +48,7 @@ export default function HomePage() {
           </div> */}
 
           {/* Display Existing Tasks */}
-          <HomeTasksSection />
+          {/* <HomeTasksSection /> */}
         </div>
       </main>
       {/* Optional Bottom Navigation */}

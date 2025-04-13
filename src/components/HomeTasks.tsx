@@ -1,30 +1,27 @@
 'use client';
+
 import { useTasks } from '@/contexts/TasksProvider';
+
 import { useAuth } from '@/contexts/AuthContext';
+
 import { Skeleton } from './ui/skeleton';
+
 import formatTimeDifference from '@/hooks/formatTimeDifference';
 
 export default function HomeTasksSection() {
-<<<<<<< HEAD
-    const { userData, loading: authLoading } = useAuth();
-    const { tasks, loading: tasksLoading } = useTasks();
-
-=======
     const { userData, loading: authLoading, error } = useAuth();
-    const { tasks, loading: tasksLoading } = useTasks();
 
+    const { tasks, loading: tasksLoading } = useTasks();
     // Show nothing until auth finishes loading
->>>>>>> 7cdd74b457f360af58408fe08025bb0c89b18d88
+
     if (authLoading) {
         return (
             <div className="text-muted-foreground">Checking authentication...</div>
         );
     }
 
-<<<<<<< HEAD
-=======
     // Show message if user is not logged in
->>>>>>> 7cdd74b457f360af58408fe08025bb0c89b18d88
+
     if (!userData) {
         return (
             <div className="text-muted-foreground">
@@ -33,14 +30,11 @@ export default function HomeTasksSection() {
         );
     }
 
-<<<<<<< HEAD
-=======
     // If tasks are still loading
->>>>>>> 7cdd74b457f360af58408fe08025bb0c89b18d88
+
     if (tasksLoading) {
         return <TaskSkeleton />;
     }
-
     const pendingTasks = tasks?.filter((task) => task.status === 'PENDING');
 
     return (
@@ -58,14 +52,21 @@ export default function HomeTasksSection() {
                     <div
                         key={task.id}
                         className={`group flex flex-col gap-1 border backdrop-blur-md px-3 py-2 transition-all hover:shadow-sm
+ 
+
             ${indx === 0 && 'rounded-t-md'}
+ 
+
             ${indx === tasks.length - 1 && 'rounded-b-md'}
+ 
+
           `}
                     >
                         <div className="flex justify-between items-center">
                             <div className="text-sm font-medium text-foreground">
                                 {task.title}
                             </div>
+
                             <div className="text-[10px] text-muted-foreground">
                                 {formatTimeDifference(task.updatedAt)}
                             </div>
@@ -96,7 +97,9 @@ function TaskSkeleton() {
             <h2 className="text-lg font-semibold tracking-tight text-foreground">
                 Your Pending Tasks
             </h2>
+
             <div className="text-muted-foreground">Loading your tasks...</div>
+
             {Array.from({ length: 4 }).map((_, i) => (
                 <div
                     key={i}
@@ -104,6 +107,7 @@ function TaskSkeleton() {
                 >
                     <div className="flex justify-between items-start mb-2">
                         <Skeleton className="h-5.5 w-2/3" />
+
                         <Skeleton className="h-5.5 w-10" />
                     </div>
                 </div>

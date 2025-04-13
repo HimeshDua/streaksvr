@@ -2,9 +2,9 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { ListChecks, PlusCircle } from "lucide-react"
 import Link from "next/link"
-import AddTaskModal from "./AddTaskModel";
-import { useEffect } from "react";
-import { notFound, useRouter } from "next/navigation";
+import AddTaskModal from "./AddTaskModel"
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 function HomeButtons() {
     const { userData, loading, error } = useAuth();
@@ -18,7 +18,7 @@ function HomeButtons() {
         }
 
         if (!loading && userData && !userData.username) {
-            notFound();
+            router.push('/404'); // Assuming you have a /404 page in your app directory
         }
     }, [loading, userData, router]);
 
@@ -29,6 +29,7 @@ function HomeButtons() {
     if (error) {
         return <div className="text-red-500">Error: {error}</div>;
     }
+
 
 
     return (
