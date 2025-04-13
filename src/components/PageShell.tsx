@@ -1,37 +1,40 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
 import Navbar from './Navbar';
-import { useAuth } from '@/contexts/AuthContext';
-import { useEffect } from 'react';
+import { AuthProvider, useAuth } from '@/contexts/AuthContext'; // Import the useAuth hook
+import SSRLoadingPage from './SSRLoadingPage';
+
+
 
 export default function PageShell({ children }: { children: React.ReactNode }) {
-  const { userData, loading } = useAuth();
   const pathname = usePathname();
-  const router = useRouter();
-
   const homePaths = ['/', '/signup', '/signin'];
   const isHome = homePaths.includes(pathname);
+  const { loading, isAuthenticated } = useAuth();
 
-  useEffect(() => {
-    if (!loading && !userData && !isHome) {
-      router.push('/signup');
-    }
-  }, [loading, userData, isHome, router]);
-
-  if (loading) return <div>Loading...</div>;
-
-  // Only proceed if userData is available or it's a public home page
-  if (!userData && !isHome) return null;
+  if (loading) return <SSRLoadingPage />;
 
   return (
-    <div className="flex overflow-hidden">
-      {!isHome && <Sidebar />}
-      <main className={`mx-auto w-full ${isHome ? 'mx-auto' : 'flex-1'}`}>
-        {isHome && <Navbar />}
-        {children}
-      </main>
+    <div >
+      {isAuthenticated ? (
+        // <AuthProvider>
+        <div className="flex overflow-hidden">
+          {!isHome && <Sidebar />}
+          <main className={`mx-auto w-full ${isHome ? 'mx-auto' : 'flex-1'}`}>
+            {isHome && <Navbar />}
+            {children}
+          </main>
+        </div>
+        // </AuthProvider>
+      ) : (
+        <div className="flex overflow-hidden">
+          <main className={`mx-auto w-full ${isHome ? 'mx-auto' : 'flex-1'}`}>
+            {children}
+          </main>
+        </div>
+      )}
     </div>
   );
 }

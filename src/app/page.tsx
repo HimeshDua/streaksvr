@@ -1,21 +1,38 @@
+'use client';
 
+import { useAuth } from '@/contexts/AuthContext';
 import HomeTasksSection from '@/components/HomeTasks';
 import HomeProfileMenu from '@/components/HomeProfileMenu';
 import HomeButtons from '@/components/HomeButtons';
 import UserProfile from './profile/[username]/page';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import UnauthenticatedHomePage from '@/components/UnAuthenticatedHomePage';
 
 export default function HomePage() {
+  const { isAuthenticated } = useAuth();
+  const pathname = usePathname();
+  const router = useRouter();
+  const pathsForUnAuthUser = ["/", "/signup", "/signin"];
+
+  useEffect(() => {
+    if (!isAuthenticated && !pathsForUnAuthUser.includes(pathname)) {
+      router.push('/');
+    }
+    // if (isAuthenticated && pathname === '/') {
+    //   router.push('/tasks');
+    // }
+  }, [isAuthenticated, pathname, router]);
+
+  if (!isAuthenticated) return <UnauthenticatedHomePage />
 
   return (
     <div className="min-h-screen bg-background py-10">
-      {/* <header className="px-4 sm:px-6 lg:px-8 flex justify-end items-center py-4"> */}
-      {/* </header> */}
       <main className="px-4 sm:px-6 lg:px-8 py-8">
         <div className="max-w-3xl mx-auto space-y-6">
           <div className='flex justify-end'>
-
             <HomeProfileMenu />
-
           </div>
 
           <div className="text-center">
@@ -25,7 +42,6 @@ export default function HomePage() {
             <p className="mt-2 text-muted-foreground text-base sm:text-lg">
               Build streaks. Crush goals. Stay consistent.
             </p>
-
             <UserProfile />
           </div>
 
@@ -34,28 +50,13 @@ export default function HomePage() {
           </h1>
 
           <HomeButtons />
-
-          {/* <div className="space-y-2">
-            <h2 className="text-lg font-semibold tracking-tight text-foreground">
-              Your Active Streaks
-            </h2>
-            <div className="text-muted-foreground">No streaks started yet. Start one above!</div>
-            {streaks.map((streak) => (
-              <div key={streak.id} className="rounded-md border p-4 bg-card text-card-foreground">
-                {streak.name} - Current Streak: {streak.count}
-              </div>
-            ))}
-          </div> */}
-
-          {/* Display Existing Tasks */}
           <HomeTasksSection />
         </div>
       </main>
-      {/* Optional Bottom Navigation */}
-      {/* <footer className="px-4 sm:px-6 lg:px-8 py-4 text-center text-muted-foreground text-sm">
-        <Link href="/history" className="hover:underline mr-4">History</Link>
-        <Link href="/settings" className="hover:underline">Settings</Link>
-      </footer> */}
+      <footer className="px-4 sm:px-6 lg:px-8 py-4 text-center text-muted-foreground text-sm">
+        <Link href="/signup" className="hover:underline mr-4">Sign up</Link>
+        <Link href="/signin" className="hover:underline">Login</Link>
+      </footer>
     </div>
   );
 }

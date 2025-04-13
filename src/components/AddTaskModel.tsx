@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ListChecks, Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useTasks } from "@/contexts/TasksProvider";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function AddTaskModal({ authorId }: { authorId: string }) {
     const [title, setTitle] = useState("");
@@ -20,7 +20,7 @@ export default function AddTaskModal({ authorId }: { authorId: string }) {
     const [dueDate, setDueDate] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [open, setOpen] = useState(false);
-    const { refetch } = useTasks();
+    const { refetchTasks } = useAuth();
     const titleInputRef = useRef<HTMLInputElement>(null);
     const status = "PENDING";
     const isCompleted = false;
@@ -59,7 +59,7 @@ export default function AddTaskModal({ authorId }: { authorId: string }) {
 
             if (!res.ok) throw new Error("Failed to submit task");
 
-            await refetch();
+            await refetchTasks();
             setOpen(false);
         } catch (error) {
             console.error("Error submitting task:", error);

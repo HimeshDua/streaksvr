@@ -1,7 +1,7 @@
 'use client';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useTasks } from '@/contexts/TasksProvider';
+import { useAuth } from '@/contexts/AuthContext';
 import formatTimeDifference from '@/hooks/formatTimeDifference';
 
 type Task = {
@@ -89,7 +89,7 @@ const statusColorMap: Record<Task['status'], string> = {
 };
 
 export default function TaskDetailsPage() {
-  const { tasks, loading: tasksLoading } = useTasks();
+  const { tasks, loading: tasksLoading } = useAuth();
 
   if (tasksLoading) {
     return (

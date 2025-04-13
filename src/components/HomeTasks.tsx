@@ -1,7 +1,5 @@
 'use client';
 
-import { useTasks } from '@/contexts/TasksProvider';
-
 import { useAuth } from '@/contexts/AuthContext';
 
 import { Skeleton } from './ui/skeleton';
@@ -9,18 +7,8 @@ import { Skeleton } from './ui/skeleton';
 import formatTimeDifference from '@/hooks/formatTimeDifference';
 
 export default function HomeTasksSection() {
-    const { userData, loading: authLoading, error } = useAuth();
+    const { userData, loading, tasks } = useAuth();
 
-    const { tasks, loading: tasksLoading } = useTasks();
-    // Show nothing until auth finishes loading
-
-    if (authLoading) {
-        return (
-            <div className="text-muted-foreground">Checking authentication...</div>
-        );
-    }
-
-    // Show message if user is not logged in
 
     if (!userData) {
         return (
@@ -32,9 +20,8 @@ export default function HomeTasksSection() {
 
     // If tasks are still loading
 
-    if (tasksLoading) {
-        return <TaskSkeleton />;
-    }
+    if (loading) return <TaskSkeleton />
+
     const pendingTasks = tasks?.filter((task) => task.status === 'PENDING');
 
     return (
