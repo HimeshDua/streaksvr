@@ -42,7 +42,7 @@ type Task = {
 };
 
 const priorityColorMap: Record<Task['priority'], string> = {
-  LOW: 'bg-green-500 text-green-50', // Keep existing semantic colors if they fit your overall theme
+  LOW: 'bg-green-500 text-green-50',
   MEDIUM: 'bg-yellow-500 text-yellow-50',
   HIGH: 'bg-red-500 text-red-50',
 };
@@ -83,9 +83,9 @@ const statusLabelMap: Record<Task['status'], string> = {
 };
 
 const statusColorMap: Record<Task['status'], string> = {
-  COMPLETED: 'bg-primary text-primary-foreground', // Using your --primary and --primary-foreground
-  PENDING: 'bg-secondary text-secondary-foreground', // Using your --secondary and --secondary-foreground
-  FAILED: 'bg-destructive text-destructive-foreground', // Using your --destructive and --destructive-foreground
+  COMPLETED: 'bg-primary text-primary-foreground',
+  PENDING: 'bg-secondary text-secondary-foreground',
+  FAILED: 'bg-destructive text-destructive-foreground',
 };
 
 export default function TaskDetailsPage() {

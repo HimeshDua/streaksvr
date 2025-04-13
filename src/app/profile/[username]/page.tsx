@@ -5,11 +5,13 @@ import { notFound, useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { useEffect } from 'react';
 import ProfileInfo from '@/components/ProfileInfo';
+import { useTasks } from '@/contexts/TasksProvider';
 
 
 export default function UserProfile() {
 
   const { userData, loading, error } = useAuth();
+  const { tasks } = useTasks();
   const router = useRouter();
 
   useEffect(() => {
@@ -38,7 +40,7 @@ export default function UserProfile() {
           username: userData.username,
           email: userData.email,
           createdAt: userData.createdAt,
-          tasksCount: userData._count?.tasks || 0,
+          tasksCount: tasks?.length || 0,
           emailVerified: userData.emailVerified,
         }}
       />

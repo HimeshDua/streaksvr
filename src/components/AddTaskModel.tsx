@@ -29,7 +29,6 @@ export default function AddTaskModal({ authorId }: { authorId: string }) {
         if (open && titleInputRef.current) {
             titleInputRef.current.focus();
         } else {
-            // Reset on modal close
             setTitle("");
             setDescription("");
             setCategory("WORK");
@@ -48,23 +47,14 @@ export default function AddTaskModal({ authorId }: { authorId: string }) {
                 body: JSON.stringify({
                     title,
                     description,
-                    status,       // "PENDING" (hardcoded)
-                    isCompleted,  // false (hardcoded)
-                    category,     // State variable
-                    priority,     // State variable
-                    dueDate,      // State variable (string from date input)
-                    authorId,     // Prop passed to the component
+                    status,
+                    isCompleted,
+                    category,
+                    priority,
+                    dueDate,
+                    authorId,
                 }),
-                // body: JSON.stringify({
-                //     title,
-                //     description,
-                //     status,
-                //     isCompleted,
-                //     category,
-                //     priority,
-                //     dueDate,
-                //     authorId,
-                // }),
+
             });
 
             if (!res.ok) throw new Error("Failed to submit task");

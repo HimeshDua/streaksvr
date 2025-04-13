@@ -41,7 +41,6 @@ type Task = {
     createdAt: string;
     updatedAt: string;
     authorId: string;
-    comments: any[]; // Assuming Comment type is available
 };
 
 export default function HomeTasksSection() {

@@ -16,7 +16,7 @@ export default function PageShell({ children }: { children: React.ReactNode }) {
     <div className="flex overflow-hidden">
       {!isHome && <Sidebar />}
       <main className={`mx-auto w-full ${isHome ? 'mx-auto' : 'flex-1'}`}>
-        {isHome && <Navbar />}
+        {/* {isHome && <Navbar />} */}
         {children}
       </main>
     </div>
