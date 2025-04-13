@@ -22,7 +22,7 @@ function AddTask() {
   const { register, handleSubmit, reset } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
-    if (!userData?.id) {
+    if (!userData || !userData?.id) {
       toast("Authentication Error", {
         description: 'User not authenticated.'
       });

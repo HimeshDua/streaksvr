@@ -14,7 +14,7 @@ export default function HomePage() {
         <div className="max-w-3xl mx-auto space-y-6">
           <div className='flex justify-end'>
 
-            {/* <HomeProfileMenu /> */}
+            <HomeProfileMenu />
           </div>
 
           <div className="text-center">
@@ -43,7 +43,7 @@ export default function HomePage() {
               <div key={streak.id} className="rounded-md border p-4 bg-card text-card-foreground">
                 {streak.name} - Current Streak: {streak.count}
               </div>
-            ))} 
+            ))}
           </div> */}
 
           {/* Display Existing Tasks */}

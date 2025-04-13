@@ -9,6 +9,7 @@ import {
   ReactNode
 } from 'react';
 import { useAuth } from './AuthContext';
+import { useRouter } from 'next/router';
 
 type Task = {
   id: string;
@@ -65,6 +66,13 @@ export function TasksProvider({ children }: { children: ReactNode }) {
   const { userData } = useAuth();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const router = useRouter()
+  useEffect(() => {
+    if (!userData) {
+      router.push('/signin');
+    }
+  }, [])
 
   const fetchTasks = useCallback(async () => {
     if (!userData?.id) return;
