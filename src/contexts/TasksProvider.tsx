@@ -10,6 +10,7 @@ import {
 } from 'react';
 import { useAuth } from './AuthContext';
 import Link from 'next/link';
+import SigninPage from '@/app/signin/page';
 
 type Task = {
   id: string;
@@ -94,7 +95,8 @@ export function TasksProvider({ children }: { children: ReactNode }) {
   }, [fetchTasks, userData?.id]);
 
   if (!userData) {
-    return <div>Please <Link href={"/signin"}>sign in</Link> to view your tasks.</div>;
+    return <SigninPage />
+    // <div>Please <Link href={"/signin"}>sign in</Link> to view your tasks.</div>;
   }
 
   return (
