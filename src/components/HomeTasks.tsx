@@ -81,17 +81,12 @@ export default function HomeTasksSection() {
             >
               {editingMode ? (
                 <article className="grid grid-cols-4 text-[12px] justify-center items-center gap-2">
-                  {' '}
-                  {/* Added gap */}
                   <div className="text-sm font-medium text-foreground">
                     {task.title}
                   </div>
-                  <div className="truncate px-2">{task.description}</div>{' '}
-                  {/* Reduced padding */}
+                  <div className="truncate px-2">{task.description}</div>
                   <div>Category: {UpperCaseFirstChar(task.category)}</div>
-                  <div className="">
-                    Status: {UpperCaseFirstChar(task.status)}
-                  </div>
+                  <div>Status: {UpperCaseFirstChar(task.status)}</div>
                 </article>
               ) : (
                 <div className="flex justify-between items-center">
