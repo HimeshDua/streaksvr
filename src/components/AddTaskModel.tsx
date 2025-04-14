@@ -8,7 +8,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { ListChecks, Loader2 } from "lucide-react";
+import { ListChecks, Loader2, Plus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -71,10 +71,10 @@ export default function AddTaskModal({ authorId }: { authorId: string }) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="secondary" className="flex items-center gap-2">
-                    <ListChecks className="h-4 w-4" />
+                <span className="flex flex-row justify-between items-center gap-1 pr-1 font-medium cursor-pointer text-base" >
+                    <Plus className="h-4 w-4" />
                     Add Task
-                </Button>
+                </span>
             </DialogTrigger>
 
             <DialogContent className="bg-card text-card-foreground p-6 rounded-xl border border-border">

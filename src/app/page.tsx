@@ -48,9 +48,10 @@ export default function HomePage() {
           <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             Track Your Progress
           </h1>
-
-          <HomeButtons />
-          <HomeTasksSection />
+          <div>
+            {/* <HomeButtons /> */}
+            <HomeTasksSection />
+          </div>
         </div>
       </main>
       <footer className="px-4 sm:px-6 lg:px-8 py-4 text-center text-muted-foreground text-sm">
