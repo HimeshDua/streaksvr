@@ -1,14 +1,13 @@
 'use client';
 
 import {useAuth} from '@/contexts/AuthContext';
-
 import {Skeleton} from './ui/skeleton';
-
 import formatTimeDifference from '@/hooks/formatTimeDifference';
 import AddTaskModal from './AddTaskModel';
-import {Edit, Edit2} from 'lucide-react';
+import {Edit, Eye, Check} from 'lucide-react';
 import {Button} from './ui/button';
 import {useState} from 'react';
+import UpperCaseFirstChar from '@/hooks/upperCaseFirstChar';
 
 export default function HomeTasksSection() {
   const {userData, loading, tasks} = useAuth();
@@ -33,22 +32,32 @@ export default function HomeTasksSection() {
 
   return (
     <div className="space-y-0 ">
-      <article className="flex pb-0.5 flex-row justify-between">
+      <article className="flex pb-0.5 flex-row justify-between items-center">
+        {' '}
         <h2 className="text-lg font-semibold tracking-tight text-foreground">
           Your Pending Tasks
         </h2>
-
-        <article className="flex flex-row">
+        <article className="flex flex-row items-center gap-2">
+          {' '}
           {/* Add */}
           <AddTaskModal authorId={authorId} />
-
           {/* Editing */}
           <Button
-            className="flex flex-row justify-between items-center gap-1 pr-1 font-medium cursor-pointer text-base"
+            className="flex flex-row justify-between items-center gap-1 font-medium cursor-pointer text-base transition-colors duration-200"
             variant="ghost"
             onClick={handleEditingMode}
           >
-            <Edit className="h-4 w-4" />
+            {editingMode ? (
+              <>
+                <Check className="h-4 w-4" />
+                Done
+              </>
+            ) : (
+              <>
+                <Edit className="h-4 w-4" />
+                Edit
+              </>
+            )}
           </Button>
         </article>
       </article>
@@ -63,34 +72,37 @@ export default function HomeTasksSection() {
             <div
               key={task.id}
               className={`group flex flex-col gap-1 border backdrop-blur-md px-3 py-2 transition-all hover:shadow-sm
-            ${indx === 0 && 'rounded-t-md'}
-            ${indx === tasks.length - 1 && 'rounded-b-md'}
-            ${editingMode && 'bg-green-100 hover:bg-green-300'}            
-            `}
+                ${indx === 0 && 'rounded-t-md'}
+                ${indx === tasks.length - 1 && 'rounded-b-md'}
+                ${
+                  editingMode ? 'bg-green-50 border-green-200' : ''
+                } // More subtle editing highlight
+              `}
             >
               {editingMode ? (
-                <article className="grid grid-cols-4 text-[12px] justify-center items-center">
+                <article className="grid grid-cols-4 text-[12px] justify-center items-center gap-2">
+                  {' '}
+                  {/* Added gap */}
                   <div className="text-sm font-medium text-foreground">
                     {task.title}
                   </div>
-                  <div className="truncate px-4">{task.description}</div>
-
-                  <div>Category: {task.category.toLowerCase()}</div>
-
-                  <div className="">Status: {task.status.toLowerCase()}</div>
+                  <div className="truncate px-2">{task.description}</div>{' '}
+                  {/* Reduced padding */}
+                  <div>Category: {UpperCaseFirstChar(task.category)}</div>
+                  <div className="">
+                    Status: {UpperCaseFirstChar(task.status)}
+                  </div>
                 </article>
               ) : (
                 <div className="flex justify-between items-center">
                   <div className="text-sm font-medium text-foreground">
                     {task.title}
                   </div>
-
                   <div className="text-[10px] text-muted-foreground">
                     {formatTimeDifference(task.updatedAt)}
                   </div>
                 </div>
               )}
-              {/*  occurs on hover */}
               {!editingMode && (
                 <div className="text-xs text-muted-foreground max-h-0 opacity-0 overflow-hidden group-hover:max-h-40 group-hover:opacity-100 transition-all duration-300 ease-in-out">
                   {task.description || (
@@ -130,7 +142,6 @@ function TaskSkeleton() {
         >
           <div className="flex justify-between items-start mb-2">
             <Skeleton className="h-5.5 w-2/3" />
-
             <Skeleton className="h-5.5 w-10" />
           </div>
         </div>
