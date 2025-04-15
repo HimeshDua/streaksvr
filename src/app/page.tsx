@@ -1,17 +1,17 @@
 'use client';
 
-import {useAuth} from '@/contexts/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 import HomeTasksSection from '@/components/HomeTasks';
 import HomeProfileMenu from '@/components/HomeProfileMenu';
 import HomeButtons from '@/components/HomeButtons';
 import UserProfile from './profile/[username]/page';
 import Link from 'next/link';
-import {usePathname, useRouter} from 'next/navigation';
-import {useEffect} from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import UnauthenticatedHomePage from '@/components/UnAuthenticatedHomePage';
 
 export default function HomePage() {
-  const {isAuthenticated} = useAuth();
+  const { isAuthenticated } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
   const pathsForUnAuthUser = ['/', '/signup', '/signin'];
@@ -52,14 +52,16 @@ export default function HomePage() {
           <HomeTasksSection />
         </div>
       </main>
-      <footer className="px-4 sm:px-6 lg:px-8 py-4 text-center text-muted-foreground text-sm">
-        <Link href="/signup" className="hover:underline mr-4">
-          Sign up
-        </Link>
-        <Link href="/signin" className="hover:underline">
-          Login
-        </Link>
-      </footer>
+      {!isAuthenticated &&
+        <footer className="px-4 sm:px-6 lg:px-8 py-4 text-center text-muted-foreground text-sm">
+          <Link href="/signup" className="hover:underline mr-4">
+            Sign up
+          </Link>
+          <Link href="/signin" className="hover:underline">
+            Login
+          </Link>
+        </footer>
+      }
     </div>
   );
 }

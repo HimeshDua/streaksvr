@@ -1,18 +1,19 @@
 'use client';
 
-import {useAuth} from '@/contexts/AuthContext';
-import {Skeleton} from './ui/skeleton';
+import { useAuth } from '@/contexts/AuthContext';
+import { Skeleton } from './ui/skeleton';
 import formatTimeDifference from '@/hooks/formatTimeDifference';
 import AddTaskModal from './AddTaskModel';
-import {Edit, Eye, Check} from 'lucide-react';
-import {Button} from './ui/button';
-import {useState} from 'react';
+import { Edit, Eye, Check } from 'lucide-react';
+import { Button } from './ui/button';
+import { useState } from 'react';
 import UpperCaseFirstChar from '@/hooks/upperCaseFirstChar';
 
 export default function HomeTasksSection() {
-  const {userData, loading, tasks} = useAuth();
+  const { userData, loading, tasks } = useAuth();
   const authorId = userData?.id;
   const [editingMode, setEditingMode] = useState(false);
+  const [editingTaskId, setEditingTaskId] = useState('');
 
   if (!userData) {
     return (
@@ -28,6 +29,11 @@ export default function HomeTasksSection() {
 
   function handleEditingMode() {
     setEditingMode(!editingMode);
+  }
+
+  function enableTaskEdit(taskId: string) {
+    setEditingTaskId(taskId);
+    console.log("Setting editingTaskId to:", taskId);
   }
 
   return (
@@ -68,16 +74,17 @@ export default function HomeTasksSection() {
             No pending tasks yet. Add one above!
           </div>
         ) : (
-          tasks.map((task, indx) => (
-            <div
+          tasks.map((task, index) => (
+            <button
+              className={`group flex flex-col gap-1 border backdrop-blur-md px-3 py-2 transition-all hover:shadow-sm w-full
+    ${index === 0 && 'rounded-t-md'}
+    ${index === tasks.length - 1 && 'rounded-b-md'}
+    ${editingMode && editingTaskId === task.id ? 'bg-green-50 border-green-200 hover:bg-green-200' : ''}
+    ${editingMode && 'bg-green-50 border-green-200 hover:bg-green-200'}
+    ${editingMode && editingTaskId !== task.id ? 'hover:bg-gray-100 cursor-pointer' : ''}
+  `}
               key={task.id}
-              className={`group flex flex-col gap-1 border backdrop-blur-md px-3 py-2 transition-all hover:shadow-sm
-                ${indx === 0 && 'rounded-t-md'}
-                ${indx === tasks.length - 1 && 'rounded-b-md'}
-                ${
-                  editingMode ? 'bg-green-50 border-green-200' : ''
-                } // More subtle editing highlight
-              `}
+              onClick={() => editingMode && enableTaskEdit(task.id)}
             >
               {editingMode ? (
                 <article className="grid grid-cols-4 text-[12px] justify-center items-center gap-2">
@@ -99,21 +106,18 @@ export default function HomeTasksSection() {
                 </div>
               )}
               {!editingMode && (
-                <div className="text-xs text-muted-foreground max-h-0 opacity-0 overflow-hidden group-hover:max-h-40 group-hover:opacity-100 transition-all duration-300 ease-in-out">
-                  {task.description || (
-                    <span className="text-red-500 italic">
-                      No description provided.
-                    </span>
-                  )}
-                  <br />
-                  {task.category || (
-                    <span className="text-red-500 italic">
-                      No category provided.
-                    </span>
-                  )}
+                <div className="text-xs flex flex-1/2 justify-between w-full text-muted-foreground max-h-0 opacity-0 overflow-hidden group-hover:max-h-40 group-hover:opacity-100 transition-all duration-300 ease-in-out">
+                  <span
+                    className={`italic ${!task.description && 'text-red-500'}`}
+                  >
+                    {task.description || 'No description provided.'}
+                  </span>
+                  <span className="text-red-500 italic">
+                    {UpperCaseFirstChar(task.category)}
+                  </span>
                 </div>
               )}
-            </div>
+            </button>
           ))
         )}
       </div>
@@ -130,7 +134,7 @@ function TaskSkeleton() {
 
       <div className="text-muted-foreground">Loading your tasks...</div>
 
-      {Array.from({length: 4}).map((_, i) => (
+      {Array.from({ length: 4 }).map((_, i) => (
         <div
           key={i}
           className="w-full border backdrop-blur-2xl rounded-md p-3 shadow-sm"
