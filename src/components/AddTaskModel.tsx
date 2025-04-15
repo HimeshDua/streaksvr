@@ -7,12 +7,12 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog';
-import {Button} from '@/components/ui/button';
-import {Loader2, Plus} from 'lucide-react';
-import {useEffect, useRef, useState} from 'react';
-import {useAuth} from '@/contexts/AuthContext';
+import { Button } from '@/components/ui/button';
+import { Loader2, Plus } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 
-export default function AddTaskModal({authorId}: {authorId: string}) {
+export default function AddTaskModal({ authorId }: { authorId: string }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('WORK');
@@ -20,7 +20,7 @@ export default function AddTaskModal({authorId}: {authorId: string}) {
   const [dueDate, setDueDate] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const {refetchTasks} = useAuth();
+  const { refetchTasks } = useAuth();
   const titleInputRef = useRef<HTMLInputElement>(null);
   const status = 'PENDING';
   const isCompleted = false;
@@ -43,7 +43,7 @@ export default function AddTaskModal({authorId}: {authorId: string}) {
     try {
       const res = await fetch('/api/tasks/add', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           title,
           description,
@@ -113,9 +113,7 @@ export default function AddTaskModal({authorId}: {authorId: string}) {
               <option value="WORK">Work</option>
               <option value="PERSONAL">Personal</option>
               <option value="LEARNING">Learning</option>
-              <option value="HEALTH">Health</option>
-              <option value="HABIT">Habit</option>
-              <option value="PROJECT">Project</option>
+              <option value="PROJECT">OTHERS</option>
             </select>
 
             <select
