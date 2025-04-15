@@ -5,40 +5,17 @@ import { useAuth } from '@/contexts/AuthContext';
 import formatTimeDifference from '@/hooks/formatTimeDifference';
 
 type Task = {
+  id: string;
   title: string;
   description?: string | null;
   status: 'COMPLETED' | 'PENDING' | 'FAILED';
   isCompleted: boolean;
   dueDate?: string | null;
   priority: 'LOW' | 'MEDIUM' | 'HIGH';
-  category:
-  | 'WORK'
-  | 'PERSONAL'
-  | 'LEARNING'
-  | 'HEALTH'
-  | 'FITNESS'
-  | 'SOCIAL'
-  | 'FAMILY'
-  | 'STUDY'
-  | 'PROJECT'
-  | 'SIDE_HUSTLE'
-  | 'FREELANCE'
-  | 'CODING'
-  | 'WRITING'
-  | 'READING'
-  | 'WATCHLIST'
-  | 'SHOPPING'
-  | 'GOALS'
-  | 'HABITS'
-  | 'SPIRITUAL'
-  | 'JOURNAL'
-  | 'BILLS'
-  | 'TRAVEL'
-  | 'EVENTS'
-  | 'MEETINGS'
-  | 'DEADLINES'
-  | 'OTHERS';
+  category: "WORK" | "PERSONAL" | "LEARNING" | "OTHERS"
+  createdAt: string;
   updatedAt: string;
+  authorId: string;
 };
 
 const priorityColorMap: Record<Task['priority'], string> = {
@@ -51,28 +28,6 @@ const categoryLabelMap: Record<Task['category'], string> = {
   WORK: 'Work',
   PERSONAL: 'Personal',
   LEARNING: 'Learning',
-  HEALTH: 'Health',
-  FITNESS: 'Fitness',
-  SOCIAL: 'Social',
-  FAMILY: 'Family',
-  STUDY: 'Study',
-  PROJECT: 'Project',
-  SIDE_HUSTLE: 'Side Hustle',
-  FREELANCE: 'Freelance',
-  CODING: 'Coding',
-  WRITING: 'Writing',
-  READING: 'Reading',
-  WATCHLIST: 'Watchlist',
-  SHOPPING: 'Shopping',
-  GOALS: 'Goals',
-  HABITS: 'Habits',
-  SPIRITUAL: 'Spiritual',
-  JOURNAL: 'Journal',
-  BILLS: 'Bills',
-  TRAVEL: 'Travel',
-  EVENTS: 'Events',
-  MEETINGS: 'Meetings',
-  DEADLINES: 'Deadlines',
   OTHERS: 'Others',
 };
 
