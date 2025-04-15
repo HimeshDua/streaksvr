@@ -5,4 +5,4 @@ type TaskForm = {
   status: string;
 };
 
-function updateTask(taskId: string, form: TaskForm) {}
+export default function updateTask(taskId: string, combinedData: any) {}

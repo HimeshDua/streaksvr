@@ -4,10 +4,12 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Skeleton } from './ui/skeleton';
 import formatTimeDifference from '@/hooks/formatTimeDifference';
 import AddTaskModal from './AddTaskModel';
-import { Edit, Eye, Check } from 'lucide-react';
+import { Edit, Check } from 'lucide-react';
 import { Button } from './ui/button';
 import { useEffect, useState } from 'react';
 import UpperCaseFirstChar from '@/hooks/upperCaseFirstChar';
+import updateTask from '@/actions/updateTask.action';
+import { toast } from 'sonner';
 
 type Task = {
   id: string;
@@ -30,8 +32,8 @@ export default function HomeTasksSection() {
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
 
   // edited inputs
-  const [editedTitle, setEditedTitle] = useState<string | null | undefined | number>(null)
-  const [editedDescription, setEditedDescription] = useState<string | undefined | null | number>(null)
+  const [editedTitle, setEditedTitle] = useState<string | null | undefined>(null)
+  const [editedDescription, setEditedDescription] = useState<string | undefined | null>(null)
   const [editedCategory, setEditedCategory] = useState<Task['category'] | null>(null);
   const [editedStatus, setEditedStatus] = useState<Task['status'] | null>(null);
 
@@ -46,9 +48,32 @@ export default function HomeTasksSection() {
 
   if (loading) return <TaskSkeleton />;
 
-  const pendingTasks = tasks?.filter((task) => task.status === 'PENDING');
+  // const pendingTasks = tasks?.filter((task) => task.status === 'PENDING');
+
 
   function handleEditingMode() {
+
+    const combinedData = {
+      title: editedTitle || '',
+      description: editedDescription || '',
+      category: editedCategory || 'OTHERS',
+      status: editedStatus || 'PENDING'
+    }
+
+    if (editingMode) {
+
+      // if (!editedTitle?.trim()) {
+      //   toast.error("Title cannot be empty");
+      //   return;
+      // }
+
+      if (editingTaskId && combinedData) {
+        updateTask(editingTaskId, combinedData);
+        toast.success("Task updated successfully");
+        console.log(editingTaskId, combinedData)
+      }
+
+    }
     setEditingMode(!editingMode);
   }
 
@@ -76,7 +101,7 @@ export default function HomeTasksSection() {
       <article className="flex pb-0.5 flex-row justify-between items-center">
         {' '}
         <h2 className="text-lg font-semibold tracking-tight text-foreground">
-          Your Pending Tasks
+          {editingMode ? "Editing Task Mode" : "Your Pending Tasks"}
         </h2>
         <article className="flex flex-row items-center gap-2">
           {' '}
@@ -88,6 +113,8 @@ export default function HomeTasksSection() {
             variant="ghost"
             onClick={handleEditingMode}
           >
+
+
             {editingMode ? (
               <>
                 <Check className="h-4 w-4" />
