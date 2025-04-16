@@ -1,6 +1,5 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import formatTimeDifference from '@/hooks/formatTimeDifference';
@@ -20,16 +19,9 @@ interface ProfileInfoProps {
 
 const ProfileInfo = ({ user }: ProfileInfoProps) => {
 
-  const [isDisabled, setIsDisabled] = useState(false)
   const pathname = usePathname();
+  const isDisabled = pathname === `/profile/${user.username}`;
 
-  useEffect(() => {
-    if (pathname === `/profile/${user.username}`) {
-      setIsDisabled(true)
-    } else {
-      setIsDisabled(false)
-    }
-  }, [])
 
   return (
 

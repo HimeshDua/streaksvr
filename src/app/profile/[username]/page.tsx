@@ -1,16 +1,16 @@
 
 'use client';
 
-import { notFound, useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+// import { notFound, useRouter } from 'next/navigation';
+// import { useEffect } from 'react';
 import ProfileInfo from '@/components/ProfileInfo';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function UserProfile() {
 
-  const { userData, loading, error } = useAuth();
+  const { userData, error } = useAuth();
   const { tasks } = useAuth();
-  const router = useRouter();
+  // const router = useRouter();
 
   if (error) {
     return <div className="text-red-500">Error: {error}</div>;

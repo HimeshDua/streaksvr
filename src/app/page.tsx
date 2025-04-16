@@ -3,35 +3,54 @@
 import { useAuth } from '@/contexts/AuthContext';
 import HomeTasksSection from '@/components/HomeTasks';
 import HomeProfileMenu from '@/components/HomeProfileMenu';
-import HomeButtons from '@/components/HomeButtons';
-import UserProfile from './profile/[username]/page';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import UnauthenticatedHomePage from '@/components/UnAuthenticatedHomePage';
+import ProfileInfo from '@/components/ProfileInfo';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { LogOutIcon, UserIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 
 export default function HomePage() {
-  const { isAuthenticated } = useAuth();
-  const pathname = usePathname();
-  const router = useRouter();
-  const pathsForUnAuthUser = ['/', '/signup', '/signin'];
-
-  useEffect(() => {
-    if (!isAuthenticated && !pathsForUnAuthUser.includes(pathname)) {
-      router.push('/');
-    }
-    // if (isAuthenticated && pathname === '/') {
-    //   router.push('/tasks');
-    // }
-  }, [isAuthenticated, pathname, router]);
-
+  const { isAuthenticated, userData, tasks } = useAuth();
   if (!isAuthenticated) return <UnauthenticatedHomePage />;
 
   return (
     <div className="min-h-screen bg-background py-0">
       <main className="px-4 sm:px-6 lg:px-8 py-8">
         <div className="max-w-5xl mx-auto space-y-6">
-          <div className="flex justify-end"><HomeProfileMenu /></div>
+          {/* <div className="flex justify-end">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="flex items-center gap-2">
+                  <UserIcon className="w-4 h-4" />
+                  <span>{userData.name}</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild>
+                  <Link
+                    href={`/profile/${userData.username}`}
+                    className="flex items-center gap-2"
+                  >
+                    <UserIcon className="w-4 h-4" />
+                    Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={async () => {
+                    await signOut(auth);
+                    window.location.href = '/';
+                  }}
+                >
+                  <LogOutIcon className="w-4 h-4 mr-2" />
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div> */}
 
           <div className="text-center">
             <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight text-primary drop-shadow-md">
@@ -40,7 +59,18 @@ export default function HomePage() {
             <p className="mt-2 text-muted-foreground text-base sm:text-lg">
               Build streaks. Crush goals. Stay consistent.
             </p>
-            <UserProfile />
+            <div className="flex justify-center relative p-8">
+              <ProfileInfo
+                user={{
+                  name: userData.name,
+                  username: userData.username,
+                  email: userData.email,
+                  createdAt: userData.createdAt,
+                  tasksCount: tasks?.length || 0,
+                  emailVerified: userData.emailVerified,
+                }}
+              />
+            </div>
           </div>
 
           <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
@@ -49,16 +79,6 @@ export default function HomePage() {
           <HomeTasksSection />
         </div>
       </main>
-      {!isAuthenticated &&
-        <footer className="px-4 sm:px-6 lg:px-8 py-4 text-center text-muted-foreground text-sm">
-          <Link href="/signup" className="hover:underline mr-4">
-            Sign up
-          </Link>
-          <Link href="/signin" className="hover:underline">
-            Login
-          </Link>
-        </footer>
-      }
     </div>
   );
 }

@@ -33,9 +33,6 @@ export default function HomeTasksSection() {
   // edited inputs
   const [editedTitle, setEditedTitle] = useState<string | null | undefined>(null)
   const [editedDescription, setEditedDescription] = useState<string | undefined | null>(null)
-  const [editedCategory, setEditedCategory] = useState<Task['category'] | null>(null);
-  const [editedStatus, setEditedStatus] = useState<Task['status'] | null>(null);
-
 
   if (!userData) {
     return (
@@ -55,8 +52,6 @@ export default function HomeTasksSection() {
     const combinedData = {
       title: editedTitle || '',
       description: editedDescription || '',
-      category: editedCategory || 'OTHERS',
-      status: editedStatus || 'PENDING'
     }
 
     if (editingMode) {
@@ -140,36 +135,14 @@ export default function HomeTasksSection() {
 
               {editingMode ? (
                 editingTaskId === task.id ?
-                  <article className="grid grid-cols-4 text-[12px] justify-center items-center gap-2">
+                  <article className="grid grid-cols-2 text-[12px] justify-center items-center gap-2">
                     <input className="text-sm font-medium text-foreground text-center" onChange={e => setEditedTitle(e.target.value)} value={editedTitle || task.title} />
                     <input className="truncate px-2 text-center" onChange={e => setEditedDescription(e.target.value)} value={editedDescription ?? task.description ?? ''} />
 
-                    <select
-                      className="border rounded text-center"
-                      value={editedCategory || task.category}
-                      onChange={e => setEditedCategory(e.target.value as Task['category'])}
-                    >
-                      <option value="WORK">WORK</option>
-                      <option value="PERSONAL">PERSONAL</option>
-                      <option value="LEARNING">LEARNING</option>
-                      <option value="OTHERS">OTHERS</option>
-                    </select>
-                    <select
-                      className="border rounded text-center"
-                      value={editedStatus || task.status}
-                      onChange={e => setEditedStatus(e.target.value as Task['status'])}
-                    >
-                      <option value="PENDING">PENDING</option>
-                      <option value="COMPLETED">COMPLETED</option>
-                      <option value="FAILED">FAILED</option>
-                    </select>
-
                   </article> :
-                  <article className="grid grid-cols-4 text-[12px] justify-center items-center gap-2">
+                  <article className="grid grid-cols-2 text-[12px] justify-center items-center gap-2">
                     <span className="text-sm font-medium text-foreground">{task.title}</span>
                     <div className="truncate px-2">{task.description}</div>
-                    <div>Category: {UpperCaseFirstChar(task.category)}</div>
-                    <div>Status: {UpperCaseFirstChar(task.status)}</div>
                   </article>
               ) : (
                 <div className="flex justify-between items-center">
