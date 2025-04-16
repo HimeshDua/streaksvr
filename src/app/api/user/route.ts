@@ -13,6 +13,10 @@ export async function POST(req: NextRequest) {
     const user = await prisma.user.findUnique({
       where: {firebaseId},
       select: {
+        name: true,
+        username: true,
+        createdAt: true,
+
         tasks: {orderBy: {updatedAt: 'desc'}},
         streaks: true
       }

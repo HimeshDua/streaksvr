@@ -11,7 +11,6 @@ export default async function updateTask(
   combinedData: TaskForm
 ) {
   try {
-    console.log('juice pila di jiye \n mosammbi kaa!');
     const updatedTask = await prisma.task.update({
       where: {id: taskId},
       data: {

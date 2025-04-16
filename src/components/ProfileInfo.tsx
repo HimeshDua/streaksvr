@@ -36,7 +36,7 @@ const ProfileInfo = ({ user }: ProfileInfoProps) => {
         <div>
           <h3 className="text-xs font-medium text-muted-foreground/70">Joined</h3>
           <p className="text-foreground">
-            {formatTimeDifference(user.createdAt).split("ago").join("before")}
+            {formatTimeDifference(new Date(user.createdAt)).split("ago").join("before")}
           </p>
         </div>
         <div>

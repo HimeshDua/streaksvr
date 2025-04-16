@@ -10,7 +10,7 @@ import SSRLoadingPage from './SSRLoadingPage';
 
 export default function PageShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const homePaths = ['/', '/signup', '/signin'];
+  const homePaths = ['/', '/signup', '/signin', '/not-found'];
   const isHome = homePaths.includes(pathname);
   const { loading, isAuthenticated } = useAuth();
 

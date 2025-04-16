@@ -13,14 +13,14 @@ import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 
 export default function HomePage() {
-  const { isAuthenticated, userData, tasks } = useAuth();
+  const { isAuthenticated, userData } = useAuth();
   if (!isAuthenticated) return <UnauthenticatedHomePage />;
 
   return (
     <div className="min-h-screen bg-background py-0">
       <main className="px-4 sm:px-6 lg:px-8 py-8">
         <div className="max-w-5xl mx-auto space-y-6">
-          {/* <div className="flex justify-end">
+          <div className="flex justify-end">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="flex items-center gap-2">
@@ -50,7 +50,7 @@ export default function HomePage() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          </div> */}
+          </div>
 
           <div className="text-center">
             <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight text-primary drop-shadow-md">
@@ -66,8 +66,8 @@ export default function HomePage() {
                   username: userData.username,
                   email: userData.email,
                   createdAt: userData.createdAt,
-                  tasksCount: tasks?.length || 0,
-                  emailVerified: userData.emailVerified,
+                  tasksCount: userData.tasks?.length || 0,
+                  emailVerified: userData.emailVerified || false,
                 }}
               />
             </div>

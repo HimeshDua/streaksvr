@@ -66,19 +66,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    // This effect will run whenever 'setUpdatedTask' function reference changes, which is likely only on initial render.
-    // You probably meant to run this when the 'UpdatedTask' state itself changes.
     setTasks((prevTasks) => {
       if (UpdatedTask) {
-        // Find the index of the task to update
         const index = prevTasks.findIndex(task => task.id === UpdatedTask.id);
         if (index !== -1) {
-          // Create a new array with the updated task
           const newTasks = [...prevTasks];
           newTasks[index] = UpdatedTask;
           return newTasks;
         } else {
-          // If the updated task is not found in the existing tasks, you might want to add it
           return [...prevTasks, UpdatedTask];
         }
       }
