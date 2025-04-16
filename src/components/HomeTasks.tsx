@@ -9,7 +9,6 @@ import { Button } from './ui/button';
 import { useEffect, useState } from 'react';
 import UpperCaseFirstChar from '@/hooks/upperCaseFirstChar';
 import updateTask from '@/actions/updateTask.action';
-import { toast } from 'sonner';
 
 type Task = {
   id: string;
@@ -61,15 +60,8 @@ export default function HomeTasksSection() {
     }
 
     if (editingMode) {
-
-      // if (!editedTitle?.trim()) {
-      //   toast.error("Title cannot be empty");
-      //   return;
-      // }
-
       if (editingTaskId && combinedData) {
         updateTask(editingTaskId, combinedData);
-        toast.success("Task updated successfully");
         console.log(editingTaskId, combinedData)
       }
 

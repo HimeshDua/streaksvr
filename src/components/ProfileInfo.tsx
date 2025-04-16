@@ -1,9 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import formatTimeDifference from '@/hooks/formatTimeDifference';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 interface ProfileInfoProps {
   user: {
@@ -17,6 +19,17 @@ interface ProfileInfoProps {
 }
 
 const ProfileInfo = ({ user }: ProfileInfoProps) => {
+
+  const [isDisabled, setIsDisabled] = useState(false)
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (pathname === `/profile/${user.username}`) {
+      setIsDisabled(true)
+    } else {
+      setIsDisabled(false)
+    }
+  }, [])
 
   return (
 
@@ -47,8 +60,13 @@ const ProfileInfo = ({ user }: ProfileInfoProps) => {
       <Separator className="mb-6" />
 
       <div className="grid grid-cols-2 gap-x-6 gap-y-4 mb-6 text-sm">
-        <Button variant="outline" className="rounded-lg text-sm" title="Username">
-          @{user.username}
+        <Button variant="outline" className="rounded-lg text-sm" title="User Profile" asChild>
+          {isDisabled ?
+            <span>@{user.username}</span> :
+            <Link href={`profile/${user.username}`}>
+              @{user.username}
+            </Link>
+          }
         </Button>
         <Button variant="outline" className="rounded-lg text-sm" title="Export your tasks">
           Export Tasks

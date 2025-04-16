@@ -28,12 +28,10 @@ export default function HomePage() {
   if (!isAuthenticated) return <UnauthenticatedHomePage />;
 
   return (
-    <div className="min-h-screen bg-background py-10">
+    <div className="min-h-screen bg-background py-0">
       <main className="px-4 sm:px-6 lg:px-8 py-8">
         <div className="max-w-5xl mx-auto space-y-6">
-          <div className="flex justify-end">
-            <HomeProfileMenu />
-          </div>
+          <div className="flex justify-end"><HomeProfileMenu /></div>
 
           <div className="text-center">
             <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight text-primary drop-shadow-md">
@@ -48,7 +46,6 @@ export default function HomePage() {
           <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             Track Your Progress
           </h1>
-          {/* <HomeButtons /> */}
           <HomeTasksSection />
         </div>
       </main>

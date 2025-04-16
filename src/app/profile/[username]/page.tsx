@@ -12,20 +12,6 @@ export default function UserProfile() {
   const { tasks } = useAuth();
   const router = useRouter();
 
-  // useEffect(() => {
-  //   if (!loading && !userData) {
-  //     router.push('/signin');
-  //   }
-
-  //   if (!loading && userData && !userData.username) {
-  //     notFound();
-  //   }
-  // }, [loading, userData, router]);
-
-  // if (loading) {
-  //   return <div>Loading profile...</div>;
-  // }
-
   if (error) {
     return <div className="text-red-500">Error: {error}</div>;
   }
