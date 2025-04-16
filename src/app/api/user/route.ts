@@ -11,7 +11,11 @@ export async function POST(req: NextRequest) {
     }
 
     const user = await prisma.user.findUnique({
-      where: {firebaseId}
+      where: {firebaseId},
+      select: {
+        tasks: {orderBy: {updatedAt: 'desc'}},
+        streaks: true
+      }
     });
 
     if (!user) {

@@ -26,7 +26,8 @@ model User {
   // IN future we will add roles for streaks dominators based on the how much tasks has roles of completed 
 
   // Relations
-  tasks Task[]
+  tasks   Task[]
+  streaks Streaks[]
 }
 
 model Task {
@@ -58,6 +59,17 @@ model Task {
 //   taskId String
 //   task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
 // }
+
+model Streaks {
+  id          String   @id @default(cuid())
+  current     Int      @default(0)
+  lastUpdated DateTime
+  longest     Int      @default(0)
+
+  // relations
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+}
 
 enum TaskStatus {
   COMPLETED

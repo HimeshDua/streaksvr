@@ -5,7 +5,6 @@ import React, {
   useState,
   useEffect,
   useContext,
-  useCallback,
   ReactNode
 } from 'react';
 import { auth } from '@/lib/firebase';
@@ -19,25 +18,43 @@ type Task = {
   description?: string | null;
   status: 'COMPLETED' | 'PENDING' | 'FAILED';
   isCompleted: boolean;
-  dueDate?: string | null;
+  dueDate?: Date | null;
   priority: 'LOW' | 'MEDIUM' | 'HIGH';
   category: "WORK" | "PERSONAL" | "LEARNING" | "OTHERS"
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
   authorId: string;
 };
 
+type Streaks = {
+  current: Number;
+  lastUpdated: Date;
+  longest: Number;
+
+}
+
 type AuthContextType = {
-  userData: any;
+  userData: {
+    id: string;
+    username: string;
+    name: string;
+    email: string;
+    emailVerified: boolean;
+    tasks: Task[];
+    streaks: Streaks | null;
+    createdAt: string;
+    updatedAt: string
+
+  };
   loading: boolean;
   error: string | null;
   tasks: Task[];
-  refetchTasks: () => Promise<void>;
-  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+  setUpdatedTask: React.Dispatch<React.SetStateAction<Task | undefined>>;
   isAuthenticated: boolean;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [userData, setUserData] = useState<any>(null);
@@ -45,27 +62,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [UpdatedTask, setUpdatedTask] = useState<Task | undefined>(); // Initialized as undefined
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const fetchTasks = useCallback(async () => {
-    if (!userData?.id) return;
-
-    setLoading(true);
-    try {
-      const res = await fetch('/api/tasks/get', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ authorId: userData.id })
-      });
-      const data = await res.json();
-      setTasks(data);
-    } catch (err: any) {
-      setError(err.message || 'Failed to fetch tasks');
-      console.error('Error fetching tasks:', err);
-    } finally {
-      setLoading(false);
-    }
-  }, [userData?.id]);
+  useEffect(() => {
+    // This effect will run whenever 'setUpdatedTask' function reference changes, which is likely only on initial render.
+    // You probably meant to run this when the 'UpdatedTask' state itself changes.
+    setTasks((prevTasks) => {
+      if (UpdatedTask) {
+        // Find the index of the task to update
+        const index = prevTasks.findIndex(task => task.id === UpdatedTask.id);
+        if (index !== -1) {
+          // Create a new array with the updated task
+          const newTasks = [...prevTasks];
+          newTasks[index] = UpdatedTask;
+          return newTasks;
+        } else {
+          // If the updated task is not found in the existing tasks, you might want to add it
+          return [...prevTasks, UpdatedTask];
+        }
+      }
+      return prevTasks;
+    });
+  }, [UpdatedTask]); // Dependency should be the 'UpdatedTask' state itself
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
@@ -89,18 +108,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               ...dbUserData
             };
             setUserData(combinedUserData);
-            await fetchTasks();
+            setTasks(combinedUserData.tasks || []);
           } else {
             setError(dbUserData?.message || 'Failed to fetch user');
             setUserData(null);
-            setIsAuthenticated(false); // Also set isAuthenticated to false on error
+            setIsAuthenticated(false);
             setLoading(false);
             return;
           }
         } catch (err: any) {
           setError(err.message || 'Unknown error');
           setUserData(null);
-          setIsAuthenticated(false); // Also set isAuthenticated to false on error
+          setIsAuthenticated(false);
           setLoading(false);
           console.error('Error fetching user data', err);
           return;
@@ -108,21 +127,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } else {
         setUserData(null);
         setTasks([]);
-        setIsAuthenticated(false); // Set isAuthenticated to false when no user
+        setIsAuthenticated(false);
       }
       setLoading(false);
     });
 
     return () => unsubscribe();
-  }, [router, fetchTasks]);
+  }, [router]);
 
   const contextValue = {
     userData,
     loading,
     error,
     tasks,
-    refetchTasks: fetchTasks,
-    setTasks,
+    setUpdatedTask, // Correct: Expose the setter function
     isAuthenticated
   };
 

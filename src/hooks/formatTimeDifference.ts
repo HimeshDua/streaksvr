@@ -1,4 +1,4 @@
-export default function formatTimeDifference(updatedAt: string) {
+export default function formatTimeDifference(updatedAt: Date) {
   const now = Date.now();
   const updated = new Date(updatedAt).getTime();
   const diffMs = now - updated;

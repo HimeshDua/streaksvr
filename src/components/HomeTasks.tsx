@@ -16,16 +16,16 @@ type Task = {
   description?: string | null;
   status: 'COMPLETED' | 'PENDING' | 'FAILED';
   isCompleted: boolean;
-  dueDate?: string | null;
+  dueDate?: Date | null;
   priority: 'LOW' | 'MEDIUM' | 'HIGH';
   category: "WORK" | "PERSONAL" | "LEARNING" | "OTHERS"
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
   authorId: string;
 };
 
 export default function HomeTasksSection() {
-  const { userData, loading, tasks } = useAuth();
+  const { userData, loading, tasks, setUpdatedTask } = useAuth();
   const authorId = userData?.id;
   const [editingMode, setEditingMode] = useState(false);
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
@@ -47,21 +47,25 @@ export default function HomeTasksSection() {
   // const pendingTasks = tasks?.filter((task) => task.status === 'PENDING');
 
 
-  function handleEditingMode() {
+  async function handleEditingMode() {
 
     const combinedData = {
       title: editedTitle || '',
       description: editedDescription || '',
     }
 
-    if (editingMode) {
-      if (editingTaskId && combinedData) {
-        updateTask(editingTaskId, combinedData);
-        console.log(editingTaskId, combinedData)
+    if (editingMode && editingTaskId) {
+      try {
+        const updatedTaskFromServer = await updateTask(editingTaskId, combinedData);
+        setUpdatedTask(updatedTaskFromServer)
+      } catch (error) {
+        console.error('Error updating task:', error);
       }
-
     }
     setEditingMode(!editingMode);
+    setEditingTaskId(null);
+    setEditedTitle(null);
+    setEditedDescription(null);
   }
 
   function enableTaskEdit(taskId: string) {
