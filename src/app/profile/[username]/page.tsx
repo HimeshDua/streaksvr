@@ -6,9 +6,10 @@ import ProfileInfo from '@/components/ProfileInfo';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function UserProfile() {
-  const { userData, tasks, error } = useAuth();
+  const { userData, tasks, error, streaks } = useAuth();
   const { username: usernameFromParams } = useParams();
   const router = useRouter();
+  const streakData = streaks[0];
 
   useEffect(() => {
     if (userData && userData.username !== usernameFromParams) {
@@ -25,12 +26,16 @@ export default function UserProfile() {
     <div className="flex justify-center relative p-8">
       <ProfileInfo
         user={{
-          name,
-          username,
-          email,
-          createdAt,
-          tasksCount: tasks?.length || 0,
-          emailVerified,
+          name: userData.name,
+          username: userData.username,
+          email: userData.email,
+          createdAt: userData.createdAt,
+          tasksCount: userData.tasks?.length || 0,
+        }}
+        streak={{
+          current: Number(streakData.current),
+          longest: Number(streakData.longest),
+          lastUpdated: streakData.lastUpdated ? new Date(streakData.lastUpdated) : null,
         }}
       />
     </div>
