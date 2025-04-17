@@ -18,53 +18,41 @@ interface ProfileInfoProps {
     current: number;
     longest: number;
     lastUpdated: Date | null;
-  } | null
+  } | null;
 }
 
-const ProfileInfo = ({ user, streak }: ProfileInfoProps) => {
+const InfoItem = ({ label, value }: { label: string; value: React.ReactNode }) => (
+  <div>
+    <h3 className="text-xs font-medium text-muted-foreground/70">{label}</h3>
+    <p className="text-foreground break-words">{value}</p>
+  </div>
+);
 
+const ProfileInfo = ({ user, streak }: ProfileInfoProps) => {
   const pathname = usePathname();
   const isDisabled = pathname === `/profile/${user.username}`;
 
-
   return (
-
     <div className="w-full">
       <Separator className="mb-6" />
 
       <div className="grid grid-cols-2 gap-x-6 gap-y-4 mb-6 text-sm">
-        <div>
-          <h3 className="text-xs font-medium text-muted-foreground/70">Email</h3>
-          <p className="text-foreground break-all">{user.email}</p>
-        </div>
-        <div>
-          <h3 className="text-xs font-medium text-muted-foreground/70">Joined</h3>
-          <p className="text-foreground">
-            {formatTimeDifference(new Date(user.createdAt)).split("ago").join("before")}
-          </p>
-        </div>
-        <div>
-          <h3 className="text-xs font-medium text-muted-foreground/70">Tasks</h3>
-          <p className="text-foreground">{user.tasksCount}</p>
-        </div>
-        <div>
-          <h3 className="text-xs font-medium text-muted-foreground/70">Highest Streak {Number(streak?.longest) || 0}</h3>
-          <p className="text-foreground">Current Count {Number(streak?.current) || 0}</p>
-          <p className="text-foreground">{streak?.lastUpdated ? formatTimeDifference(streak.lastUpdated) : 'No data available'}
-          </p>
-        </div>
+        <InfoItem label="Email" value={user.email} />
+        <InfoItem label="Joined" value={formatTimeDifference(new Date(user.createdAt)).replace("ago", "before")} />
+        <InfoItem label="Tasks" value={user.tasksCount} />
+        <InfoItem label="Highest Streak" value={Number(streak?.longest) || 0} />
+        <InfoItem label="Current Count" value={Number(streak?.current) || 0} />
+        <InfoItem
+          label="Last Active"
+          value={streak?.lastUpdated ? formatTimeDifference(streak.lastUpdated) : 'Not yet started'}
+        />
       </div>
 
       <Separator className="mb-6" />
 
       <div className="grid grid-cols-2 gap-x-6 gap-y-4 mb-6 text-sm">
         <Button variant="outline" className="rounded-lg text-sm" title="User Profile" asChild>
-          {isDisabled ?
-            <span>@{user.username}</span> :
-            <Link href={`profile/${user.username}`}>
-              @{user.username}
-            </Link>
-          }
+          {isDisabled ? <span>@{user.username}</span> : <Link href={`/profile/${user.username}`}>@{user.username}</Link>}
         </Button>
         <Button variant="outline" className="rounded-lg text-sm" title="Export your tasks">
           Export Tasks

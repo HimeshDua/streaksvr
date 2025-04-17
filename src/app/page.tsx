@@ -6,7 +6,7 @@ import HomeProfileMenu from '@/components/HomeProfileMenu';
 import UnauthenticatedHomePage from '@/components/UnAuthenticatedHomePage';
 import ProfileInfo from '@/components/ProfileInfo';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { LogOutIcon, UserIcon } from 'lucide-react';
+import { ListTodo, LogOutIcon, UserIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { signOut } from 'firebase/auth';
@@ -39,6 +39,16 @@ export default function HomePage() {
                   >
                     <UserIcon className="w-4 h-4" />
                     Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link
+                    href={`/profile/${userData.username}`}
+                    className="flex items-center gap-2"
+                  >
+                    <ListTodo className="w-4 h-4" />
+                    Tasks
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />

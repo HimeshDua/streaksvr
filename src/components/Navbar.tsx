@@ -17,19 +17,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from './ui/sheet';
 import { useAuth } from '@/contexts/AuthContext';
-
-// interface UserData {
-//   username: string;
-//   firebaseId: string;
-//   email: string;
-//   name: string;
-// }
 
 function Navbar() {
   const { userData } = useAuth();
