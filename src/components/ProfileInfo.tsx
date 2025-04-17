@@ -48,11 +48,9 @@ const ProfileInfo = ({ user, streak }: ProfileInfoProps) => {
           <p className="text-foreground">{user.tasksCount}</p>
         </div>
         <div>
-          <h3 className="text-xs font-medium text-muted-foreground/70">Highest Streak</h3>
-          <p className="text-foreground">{Number(streak?.longest) || 0}</p>
-          <p className="text-foreground">{Number(streak?.current) || 0}</p>
-          <p className="text-foreground">
-            {streak?.lastUpdated ? formatTimeDifference(streak.lastUpdated) : 'No data available'}
+          <h3 className="text-xs font-medium text-muted-foreground/70">Highest Streak {Number(streak?.longest) || 0}</h3>
+          <p className="text-foreground">Current Count {Number(streak?.current) || 0}</p>
+          <p className="text-foreground">{streak?.lastUpdated ? formatTimeDifference(streak.lastUpdated) : 'No data available'}
           </p>
         </div>
       </div>

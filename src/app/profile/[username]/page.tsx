@@ -20,8 +20,6 @@ export default function UserProfile() {
   if (error) return <div className="text-red-500">Error: {error}</div>;
   if (!userData || userData.username !== usernameFromParams) return null;
 
-  const { name, username, email, createdAt, emailVerified } = userData;
-
   return (
     <div className="flex justify-center relative p-8">
       <ProfileInfo
