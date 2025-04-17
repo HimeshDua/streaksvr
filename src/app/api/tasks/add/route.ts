@@ -5,7 +5,6 @@ import {NextResponse} from 'next/server';
 async function POST(req: Request) {
   try {
     const body = await req.json();
-    console.log('Request Body:', body);
 
     const {title, description, category, priority, authorId} = body;
 
@@ -40,7 +39,6 @@ async function POST(req: Request) {
     });
 
     const updateStreakData = await updateStreakOnTaskComplete(existingUser.id);
-    console.log('updateStreakData', updateStreakData);
 
     return NextResponse.json(newTask, {status: 201});
   } catch (error: any) {

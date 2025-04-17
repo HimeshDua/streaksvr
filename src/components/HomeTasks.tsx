@@ -25,9 +25,13 @@ type Task = {
 };
 
 export default function HomeTasksSection() {
-  const { userData, loading, tasks, setUpdatedTask } = useAuth();
+  const { userData, tasks, setUpdatedTask } = useAuth();
   const [editingMode, setEditingMode] = useState(false);
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+
+  // initial inputs
+  const [initialTitle, setInitialTitle] = useState<string | null | undefined>(null)
+  const [initialDescription, setInitialDescription] = useState<string | undefined | null>(null)
 
   // edited inputs
   const [editedTitle, setEditedTitle] = useState<string | null | undefined>(null)
@@ -41,17 +45,36 @@ export default function HomeTasksSection() {
     );
   }
 
-  if (loading) return <TaskSkeleton />;
+  useEffect(() => {
+    const thatTask = tasks.find((task) => task.id === editingTaskId);
+    if (thatTask) {
+      setInitialTitle(thatTask.title);
+      setInitialDescription(thatTask.description);
+    }
+  }, [editingTaskId, tasks.length]);
+
 
   // const pendingTasks = tasks?.filter((task) => task.status === 'PENDING');
 
 
   async function handleEditingMode() {
 
+    if (!editingTaskId) return;
+
+    if ((initialTitle ?? '') === (editedTitle ?? '') && (initialDescription ?? '') === (editedDescription ?? '')) {
+      setEditingMode(!editingMode);
+      setEditingTaskId(null);
+      setEditedTitle(null);
+      setEditedDescription(null);
+      return;
+    }
+
+
     const combinedData = {
       title: editedTitle || '',
       description: editedDescription || '',
     }
+
 
     if (editingMode && editingTaskId) {
       try {
@@ -74,7 +97,6 @@ export default function HomeTasksSection() {
     setEditedTitle(selectedTask?.title);
     setEditedDescription(selectedTask?.description);
 
-    console.log("Setting editingTaskId to:", taskId);
   }
 
   useEffect(() => {
@@ -94,16 +116,14 @@ export default function HomeTasksSection() {
           {editingMode ? "Editing Task Mode" : "Your Pending Tasks"}
         </h2>
         <article className="flex flex-row items-center gap-2">
-          {' '}
           {/* Add */}
           <AddTaskModal authorId={userData.firebaseId} />
           {/* Editing */}
           <Button
             className="flex flex-row justify-between items-center gap-1 font-medium cursor-pointer text-base transition-colors duration-200"
             variant="ghost"
-            onClick={handleEditingMode}
+            onClick={editingMode && editingTaskId ? handleEditingMode : () => setEditingMode(!editingMode)}
           >
-
 
             {editingMode ? (
               <>
@@ -176,29 +196,5 @@ export default function HomeTasksSection() {
         )}
       </div>
     </div >
-  );
-}
-
-function TaskSkeleton() {
-  return (
-    <div className="space-y-4 w-full relative">
-      <h2 className="text-lg font-semibold tracking-tight text-foreground">
-        Your Pending Tasks
-      </h2>
-
-      <div className="text-muted-foreground">Loading your tasks...</div>
-
-      {Array.from({ length: 4 }).map((_, i) => (
-        <div
-          key={i}
-          className="w-full border backdrop-blur-2xl rounded-md p-3 shadow-sm"
-        >
-          <div className="flex justify-between items-start mb-2">
-            <Skeleton className="h-5.5 w-2/3" />
-            <Skeleton className="h-5.5 w-10" />
-          </div>
-        </div>
-      ))}
-    </div>
   );
 }

@@ -21,9 +21,9 @@ export default function PageShell({ children }: { children: React.ReactNode }) {
       {isAuthenticated ? (
         // <AuthProvider>
         <div className="flex overflow-hidden">
-          {!isHome && <Sidebar />}
+          {/* {!isHome && <Sidebar />} */}
           <main className={`mx-auto w-full ${isHome ? 'mx-auto' : 'flex-1'}`}>
-            {/* {isHome && <Navbar />} */}
+            {<Navbar />}
             {children}
           </main>
         </div>

@@ -1,12 +1,10 @@
 'use client';
 
 import {
-  BellIcon,
   HomeIcon,
+  ListTodo,
   LogOutIcon,
   MenuIcon,
-  MoonIcon,
-  SunIcon,
   UserIcon
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -30,7 +28,7 @@ function Navbar() {
 
   return (
     <header className="backdrop-blur-2xl mx-auto border-b border-border sticky top-0 z-50">
-      <div className="container flex items-center mx-auto justify-between h-16 px-4">
+      <div className="container flex items-center justify-between h-16 px-4">
         {/* Logo / Title */}
         <Link href="/" className="font-bold text-lg">
           Streaksvr
@@ -38,48 +36,54 @@ function Navbar() {
 
         {/* Desktop Navigation */}
         <nav className="hidden sm:flex items-center space-x-4">
-          <Button variant="ghost" className="flex items-center gap-2" asChild>
-            <Link href="/">
+          <Button variant="ghost" asChild>
+            <Link href="/" className="flex items-center gap-2">
               <HomeIcon className="w-4 h-4" />
               <span>Home</span>
             </Link>
           </Button>
 
-          {userData ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="flex items-center gap-2">
+                <UserIcon className="w-4 h-4" />
+                <span>{userData.name}</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem asChild>
+                <Link href="/" className="flex items-center gap-2">
+                  <HomeIcon className="w-4 h-4" />
+                  Home
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href={`/profile/${userData.username}`} className="flex items-center gap-2">
                   <UserIcon className="w-4 h-4" />
-                  <span>{userData.name}</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem asChild>
-                  <Link
-                    href={`/profile/${userData.username}`}
-                    className="flex items-center gap-2"
-                  >
-                    <UserIcon className="w-4 h-4" />
-                    Profile
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
+                  Profile
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href={`/profile/${userData.username}/tasks`} className="flex items-center gap-2">
+                  <ListTodo className="w-4 h-4" />
+                  Tasks
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <button
                   onClick={async () => {
                     await signOut(auth);
                     window.location.href = '/';
                   }}
+                  className="flex items-center gap-2 w-full text-left"
                 >
-                  <LogOutIcon className="w-4 h-4 mr-2" />
+                  <LogOutIcon className="w-4 h-4" />
                   Log out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <Button variant="default" asChild>
-              <Link href="/signup">Sign In</Link>
-            </Button>
-          )}
+                </button>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </nav>
 
         {/* Mobile Navigation Button */}
@@ -101,47 +105,39 @@ function Navbar() {
             <SheetTitle>Menu</SheetTitle>
           </SheetHeader>
           <nav className="flex flex-col space-y-4 mt-6">
-            <Button
-              variant="ghost"
-              className="flex items-center gap-3 justify-start"
-              asChild
-            >
+            <Button variant="ghost" asChild className="justify-start gap-3">
               <Link href="/">
                 <HomeIcon className="w-4 h-4" />
                 Home
               </Link>
             </Button>
 
-            {userData ? (
-              <>
-                <Button
-                  variant="ghost"
-                  className="flex items-center gap-3 justify-start"
-                  asChild
-                >
-                  <Link href={`/profile/${userData.username}`}>
-                    <UserIcon className="w-4 h-4" />
-                    Profile
-                  </Link>
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="flex items-center gap-3 justify-start"
-                  onClick={async () => {
-                    await signOut(auth);
-                    setIsMobileMenuOpen(false);
-                    window.location.href = '/';
-                  }}
-                >
-                  <LogOutIcon className="w-4 h-4" />
-                  Log out
-                </Button>
-              </>
-            ) : (
-              <Button variant="default" className="w-full" asChild>
-                <Link href="/signup">Sign In</Link>
-              </Button>
-            )}
+            <Button variant="ghost" asChild className="justify-start gap-3">
+              <Link href={`/profile/${userData.username}`}>
+                <UserIcon className="w-4 h-4" />
+                Profile
+              </Link>
+            </Button>
+
+            <Button variant="ghost" asChild className="justify-start gap-3">
+              <Link href={`/profile/${userData.username}/tasks`}>
+                <ListTodo className="w-4 h-4" />
+                Tasks
+              </Link>
+            </Button>
+
+            <Button
+              variant="ghost"
+              className="justify-start gap-3"
+              onClick={async () => {
+                await signOut(auth);
+                setIsMobileMenuOpen(false);
+                window.location.href = '/';
+              }}
+            >
+              <LogOutIcon className="w-4 h-4" />
+              Log out
+            </Button>
           </nav>
         </SheetContent>
       </Sheet>

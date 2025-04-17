@@ -68,13 +68,13 @@ export default function TaskDetailsPage() {
 
   // i think ui is good
   return (
-    <div className="w-full overflow-x-auto max-w-[1200px] mx-auto max-h-[500px] p-6">
+    <div className="w-full overflow-x-auto max-w-7xl mx-auto max-h-[500px] p-6">
       <h1 className="text-2xl font-bold tracking-tight text-foreground mb-4" style={{ color: 'var(--foreground)' }}>
         All Tasks
       </h1>
 
-      <div className="overflow-y-auto md:w-[70vw] border rounded-md p-4">
-        <div className="min-w-[900px] grid grid-cols-[200px_100px_100px_150px_150px_200px_80px_1fr] gap-4 text-xs font-medium text-muted-foreground uppercase border-b pb-2">
+      <div className="overflow-y-auto border rounded-md p-4">
+        <div className="min-w-[900px] grid grid-cols-[200px_100px_100px_150px_150px_200px_80px_1fr] gap-4 text-xs font-medium text-muted-foreground uppercase border-b w-fit pb-2">
           <span>Title</span>
           <span>Status</span>
           <span>Priority</span>
@@ -93,7 +93,7 @@ export default function TaskDetailsPage() {
 
           <div
             key={task.id}
-            className="grid items-center min-w-[900px] grid-cols-[200px_100px_100px_150px_150px_200px_80px_1fr] gap-4 py-2 border-b text-sm"
+            className="grid items-center min-w-[900px] grid-cols-[200px_100px_100px_150px_150px_200px_80px_1fr] gap-4 py-2 border-b text-sm w-fit"
 
           >
 

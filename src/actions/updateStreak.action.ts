@@ -28,7 +28,6 @@ export async function updateStreakOnTaskComplete(userId: string) {
 
   if (daysDiff === 0) {
     // Already updated today
-    console.log('Streak already updated today');
     return;
   } else if (daysDiff === 1) {
     // Continue streak
@@ -40,8 +39,6 @@ export async function updateStreakOnTaskComplete(userId: string) {
         longest: Math.max(streak.longest, streak.current + 1)
       }
     });
-
-    console.log('Streak continued:', updatedStreak);
   } else {
     // Missed a day — reset streak
     const resetStreak = await prisma.streaks.update({
@@ -51,7 +48,5 @@ export async function updateStreakOnTaskComplete(userId: string) {
         lastUpdated: today
       }
     });
-
-    console.log('Streak reset:', resetStreak);
   }
 }

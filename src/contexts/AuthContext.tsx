@@ -101,7 +101,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               emailVerified: authUser.emailVerified,
               ...dbUserData
             };
-            console.log('Combined User Data:', combinedUserData);
             setUserData(combinedUserData);
             setTasks(combinedUserData.tasks || []);
             setStreaks(combinedUserData.streaks || []);

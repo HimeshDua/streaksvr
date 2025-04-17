@@ -23,47 +23,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-background py-0">
       <main className="px-4 sm:px-6 lg:px-8 py-8">
         <div className="max-w-5xl mx-auto space-y-6">
-          <div className="flex justify-end">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-2">
-                  <UserIcon className="w-4 h-4" />
-                  <span>{userData.name}</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem asChild>
-                  <Link
-                    href={`/profile/${userData.username}`}
-                    className="flex items-center gap-2"
-                  >
-                    <UserIcon className="w-4 h-4" />
-                    Profile
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link
-                    href={`/profile/${userData.username}`}
-                    className="flex items-center gap-2"
-                  >
-                    <ListTodo className="w-4 h-4" />
-                    Tasks
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={async () => {
-                    await signOut(auth);
-                    window.location.href = '/';
-                  }}
-                >
-                  <LogOutIcon className="w-4 h-4 mr-2" />
-                  Log out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+
 
           <div className="text-center">
             <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight text-primary drop-shadow-md">
