@@ -1,25 +1,23 @@
+import {updateStreakOnTaskComplete} from '@/actions/updateStreak.action';
 import {prisma} from '@/lib/prisma';
 import {NextResponse} from 'next/server';
-import {z} from 'zod';
 
 async function POST(req: Request) {
   try {
     const body = await req.json();
     console.log('Request Body:', body);
 
-    const {
-      title,
-      description,
-      authorId,
-      status,
-      isCompleted,
-      dueDate,
-      priority,
-      category
-    } = body;
+    const {title, description, category, priority, authorId} = body;
+
+    if (!title || !authorId) {
+      return NextResponse.json(
+        {error: 'Missing title or authorId'},
+        {status: 400}
+      );
+    }
 
     const existingUser = await prisma.user.findUnique({
-      where: {id: authorId}
+      where: {firebaseId: authorId}
     });
 
     if (!existingUser) {
@@ -33,14 +31,16 @@ async function POST(req: Request) {
       data: {
         title,
         description,
-        authorId,
-        status,
-        isCompleted: isCompleted || false,
-        dueDate: dueDate ? new Date(dueDate) : null,
-        priority: priority || 'MEDIUM',
-        category: category || 'WORK'
+        authorId: existingUser.id,
+        status: 'PENDING',
+        isCompleted: false,
+        category: category || 'WORK',
+        priority: priority || 'MEDIUM'
       }
     });
+
+    const updateStreakData = await updateStreakOnTaskComplete(existingUser.id);
+    console.log('updateStreakData', updateStreakData);
 
     return NextResponse.json(newTask, {status: 201});
   } catch (error: any) {

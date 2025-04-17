@@ -13,8 +13,11 @@ import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 
 export default function HomePage() {
-  const { isAuthenticated, userData } = useAuth();
+  const { isAuthenticated, userData, streaks } = useAuth();
   if (!isAuthenticated) return <UnauthenticatedHomePage />;
+  const streakData = streaks[0]
+
+
 
   return (
     <div className="min-h-screen bg-background py-0">
@@ -67,7 +70,11 @@ export default function HomePage() {
                   email: userData.email,
                   createdAt: userData.createdAt,
                   tasksCount: userData.tasks?.length || 0,
-                  emailVerified: userData.emailVerified || false,
+                }}
+                streak={{
+                  current: Number(streakData.current),
+                  longest: Number(streakData.longest),
+                  lastUpdated: streakData.lastUpdated ? new Date(streakData.lastUpdated) : null,
                 }}
               />
             </div>

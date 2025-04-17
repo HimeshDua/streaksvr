@@ -1,3 +1,4 @@
+'use server';
 import {prisma} from '@/lib/prisma';
 import {differenceInCalendarDays} from 'date-fns';
 
@@ -21,7 +22,9 @@ export async function updateStreakOnTaskComplete(userId: string) {
     return;
   }
 
-  const daysDiff = differenceInCalendarDays(today, streak.lastUpdated);
+  const daysDiff = streak.lastUpdated
+    ? differenceInCalendarDays(today, streak.lastUpdated)
+    : Infinity;
 
   if (daysDiff === 0) {
     // Already updated today

@@ -17,13 +17,10 @@ export default function AddTaskModal({ authorId }: { authorId: string }) {
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('WORK');
   const [priority, setPriority] = useState('MEDIUM');
-  const [dueDate, setDueDate] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const { refetchTasks } = useAuth();
+  // const { setUpdatedTask } = useAuth();
   const titleInputRef = useRef<HTMLInputElement>(null);
-  const status = 'PENDING';
-  const isCompleted = false;
 
   useEffect(() => {
     if (open && titleInputRef.current) {
@@ -33,7 +30,6 @@ export default function AddTaskModal({ authorId }: { authorId: string }) {
       setDescription('');
       setCategory('WORK');
       setPriority('MEDIUM');
-      setDueDate('');
     }
   }, [open]);
 
@@ -47,18 +43,16 @@ export default function AddTaskModal({ authorId }: { authorId: string }) {
         body: JSON.stringify({
           title,
           description,
-          status,
-          isCompleted,
           category,
           priority,
-          dueDate,
           authorId
         })
       });
 
       if (!res.ok) throw new Error('Failed to submit task');
+      // const data = await res.json();
 
-      await refetchTasks();
+      // await setUpdatedTask(data);
       setOpen(false);
     } catch (error) {
       console.error('Error submitting task:', error);
@@ -126,13 +120,6 @@ export default function AddTaskModal({ authorId }: { authorId: string }) {
               <option value="HIGH">High</option>
             </select>
           </div>
-
-          <input
-            type="date"
-            className="w-full rounded-md border border-border bg-input p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-          />
 
           <Button type="submit" disabled={isLoading} className="w-full">
             {isLoading ? (

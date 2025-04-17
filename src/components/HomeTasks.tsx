@@ -26,7 +26,6 @@ type Task = {
 
 export default function HomeTasksSection() {
   const { userData, loading, tasks, setUpdatedTask } = useAuth();
-  const authorId = userData?.id;
   const [editingMode, setEditingMode] = useState(false);
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
 
@@ -97,7 +96,7 @@ export default function HomeTasksSection() {
         <article className="flex flex-row items-center gap-2">
           {' '}
           {/* Add */}
-          <AddTaskModal authorId={authorId} />
+          <AddTaskModal authorId={userData.firebaseId} />
           {/* Editing */}
           <Button
             className="flex flex-row justify-between items-center gap-1 font-medium cursor-pointer text-base transition-colors duration-200"

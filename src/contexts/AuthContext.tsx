@@ -5,11 +5,10 @@ import React, {
   useState,
   useEffect,
   useContext,
-  ReactNode
 } from 'react';
 import { auth } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
-import { useRouter } from 'next/navigation';
+// import { updateStreakOnTaskComplete } from '@/actions/updateStreak.action';
 
 // Define the types
 type Task = {
@@ -28,9 +27,8 @@ type Task = {
 
 type Streaks = {
   current: Number;
-  lastUpdated: Date;
   longest: Number;
-
+  lastUpdated: Date;
 }
 
 type AuthContextType = {
@@ -40,15 +38,16 @@ type AuthContextType = {
     name: string;
     email: string;
     emailVerified: boolean;
+    firebaseId: string;
     tasks: Task[];
-    streaks: Streaks | null;
+    streaks: Streaks[];
     createdAt: string;
     updatedAt: string
-
   };
   loading: boolean;
   error: string | null;
   tasks: Task[];
+  streaks: Streaks[];
   setUpdatedTask: React.Dispatch<React.SetStateAction<Task | undefined>>;
   isAuthenticated: boolean;
 };
@@ -60,8 +59,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [userData, setUserData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [streaks, setStreaks] = useState<Streaks[]>([]);
   const [UpdatedTask, setUpdatedTask] = useState<Task | undefined>(); // Initialized as undefined
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -79,7 +78,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       return prevTasks;
     });
-  }, [UpdatedTask]); // Dependency should be the 'UpdatedTask' state itself
+  }, [UpdatedTask]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
@@ -97,13 +96,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
           if (res.ok) {
             const combinedUserData = {
-              uid: authUser.uid,
+              firebaseId: authUser.uid,
               email: authUser.email,
               emailVerified: authUser.emailVerified,
               ...dbUserData
             };
+            console.log('Combined User Data:', combinedUserData);
             setUserData(combinedUserData);
             setTasks(combinedUserData.tasks || []);
+            setStreaks(combinedUserData.streaks || []);
+
+            // updateStreakOnTaskComplete(userData.id)
           } else {
             setError(dbUserData?.message || 'Failed to fetch user');
             setUserData(null);
@@ -128,14 +131,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     return () => unsubscribe();
-  }, [router]);
+  }, []);
 
   const contextValue = {
     userData,
     loading,
     error,
     tasks,
-    setUpdatedTask, // Correct: Expose the setter function
+    streaks,
+    setUpdatedTask,
     isAuthenticated
   };
 

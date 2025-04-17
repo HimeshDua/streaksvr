@@ -13,11 +13,15 @@ interface ProfileInfoProps {
     email: string;
     createdAt: string;
     tasksCount: number;
-    emailVerified: boolean;
   };
+  streak: {
+    current: number;
+    longest: number;
+    lastUpdated: Date | null;
+  } | null
 }
 
-const ProfileInfo = ({ user }: ProfileInfoProps) => {
+const ProfileInfo = ({ user, streak }: ProfileInfoProps) => {
 
   const pathname = usePathname();
   const isDisabled = pathname === `/profile/${user.username}`;
@@ -44,8 +48,12 @@ const ProfileInfo = ({ user }: ProfileInfoProps) => {
           <p className="text-foreground">{user.tasksCount}</p>
         </div>
         <div>
-          <h3 className="text-xs font-medium text-muted-foreground/70">Email Verified</h3>
-          <p className="text-foreground">{user.emailVerified ? 'Yes' : 'No'}</p>
+          <h3 className="text-xs font-medium text-muted-foreground/70">Highest Streak</h3>
+          <p className="text-foreground">{Number(streak?.longest) || 0}</p>
+          <p className="text-foreground">{Number(streak?.current) || 0}</p>
+          <p className="text-foreground">
+            {streak?.lastUpdated ? formatTimeDifference(streak.lastUpdated) : 'No data available'}
+          </p>
         </div>
       </div>
 
