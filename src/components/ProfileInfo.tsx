@@ -30,10 +30,17 @@ const InfoItem = ({ label, value }: { label: string; value: React.ReactNode }) =
 
 const ProfileInfo = ({ user, streak }: ProfileInfoProps) => {
   const pathname = usePathname();
-  const isDisabled = pathname === `/profile/${user.username}`;
+  const isUserProfilePage = pathname === `/profile/${user.username}`;
 
   return (
-    <div className="w-full">
+    <div className={`w-full ${isUserProfilePage ? "px-6 py-4" : ""}`}>
+
+      {isUserProfilePage && (
+        <h1 className={`text-3xl font-bold tracking-tight text-foreground sm:text-4xl ${isUserProfilePage ? "mb-6" : ""}`}>
+          {user.name}
+        </h1>
+      )}
+
       <Separator className="mb-6" />
 
       <div className="grid grid-cols-2 gap-x-6 gap-y-4 mb-6 text-sm">
@@ -52,7 +59,7 @@ const ProfileInfo = ({ user, streak }: ProfileInfoProps) => {
 
       <div className="grid grid-cols-2 gap-x-6 gap-y-4 mb-6 text-sm">
         <Button variant="outline" className="rounded-lg text-sm" title="User Profile" asChild>
-          {isDisabled ? <span>@{user.username}</span> : <Link href={`/profile/${user.username}`}>@{user.username}</Link>}
+          {isUserProfilePage ? <span>@{user.username}</span> : <Link href={`/profile/${user.username}`}>@{user.username}</Link>}
         </Button>
         <Button variant="outline" className="rounded-lg text-sm" title="Export your tasks">
           Export Tasks

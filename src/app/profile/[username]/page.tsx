@@ -31,9 +31,9 @@ export default function UserProfile() {
           tasksCount: userData.tasks?.length || 0,
         }}
         streak={{
-          current: Number(streakData.current),
-          longest: Number(streakData.longest),
-          lastUpdated: streakData.lastUpdated ? new Date(streakData.lastUpdated) : null,
+          current: Number(streakData?.current || 0),
+          longest: Number(streakData?.longest || 0),
+          lastUpdated: streakData?.lastUpdated ? new Date(streakData.lastUpdated || null) : null,
         }}
       />
     </div>

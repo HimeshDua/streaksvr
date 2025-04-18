@@ -1,9 +1,8 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import Sidebar from '@/components/Sidebar';
 import Navbar from './Navbar';
-import { AuthProvider, useAuth } from '@/contexts/AuthContext'; // Import the useAuth hook
+import { useAuth } from '@/contexts/AuthContext';
 import SSRLoadingPage from './SSRLoadingPage';
 
 
@@ -19,15 +18,12 @@ export default function PageShell({ children }: { children: React.ReactNode }) {
   return (
     <div >
       {isAuthenticated ? (
-        // <AuthProvider>
         <div className="flex overflow-hidden">
-          {/* {!isHome && <Sidebar />} */}
           <main className={`mx-auto w-full ${isHome ? 'mx-auto' : 'flex-1'}`}>
             {<Navbar />}
             {children}
           </main>
         </div>
-        // </AuthProvider>
       ) : (
         <div className="flex overflow-hidden">
           <main className={`mx-auto w-full ${isHome ? 'mx-auto' : 'flex-1'}`}>

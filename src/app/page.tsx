@@ -9,7 +9,9 @@ import ProfileInfo from '@/components/ProfileInfo';
 export default function HomePage() {
   const { isAuthenticated, userData, streaks } = useAuth();
   if (!isAuthenticated) return <UnauthenticatedHomePage />;
-  const streakData = Array.isArray(streaks) ? streaks[0] : null;
+
+
+  const streakData = Array.isArray(streaks) && streaks.length > 0 ? streaks[0] : {};
 
 
 
@@ -37,9 +39,9 @@ export default function HomePage() {
                     tasksCount: userData.tasks?.length || 0,
                   }}
                   streak={{
-                    current: Number(streakData?.current),
-                    longest: Number(streakData?.longest),
-                    lastUpdated: streakData?.lastUpdated ? new Date(streakData.lastUpdated) : null,
+                    current: Number(streakData?.current || 0),
+                    longest: Number(streakData?.longest || 0),
+                    lastUpdated: streakData?.lastUpdated ? new Date(streakData.lastUpdated || "") : null,
                   }}
                 />
               )}
