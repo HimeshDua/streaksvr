@@ -148,6 +148,7 @@ export default function UnauthenticatedHomePage() {
                     <div className="text-xs text-muted-foreground mb-2">
                         🔥 Weekly Streak Heatmap
                     </div>
+
                     <div className="grid grid-cols-7 gap-1">
                         {Array.from({ length: 21 }).map((_, i) => (
                             <motion.div
