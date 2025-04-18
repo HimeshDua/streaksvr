@@ -23,11 +23,22 @@ const fadeUp = {
         opacity: 1,
         y: 0,
         transition: {
-            delay: i * 0.2,
-            duration: 0.6,
-            ease: 'easeOut'
-        }
-    })
+            delay: i * 0.1,
+            duration: 0.4,
+            ease: "easeOut",
+        },
+    }),
+};
+
+const floatAnim = {
+    float: {
+        y: [0, -5, 0], // up then back down
+        transition: {
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut",
+        },
+    },
 };
 
 const mainTextVariants = {
@@ -129,24 +140,31 @@ export default function UnauthenticatedHomePage() {
                 initial="hidden"
                 animate="visible"
             >
-                <div className="bg-card border border-border rounded-lg p-4 w-64 shadow-md">
+                <motion.div
+                    className="bg-card border border-border rounded-lg p-4 w-64 shadow-md"
+                    variants={floatAnim}
+                    animate="float"
+                >
                     <div className="text-xs text-muted-foreground mb-2">
                         🔥 Weekly Streak Heatmap
                     </div>
                     <div className="grid grid-cols-7 gap-1">
                         {Array.from({ length: 21 }).map((_, i) => (
-                            <div
+                            <motion.div
                                 key={i}
                                 className={`h-4 w-4 rounded-sm ${i % 5 === 0
-                                    ? 'bg-primary'
-                                    : 'bg-muted-foreground/20'
+                                    ? "bg-primary"
+                                    : "bg-muted-foreground/20"
                                     }`}
+                                variants={fadeUp}
+                                custom={i * 0.05}
+                                initial="hidden"
+                                animate="visible"
                             />
                         ))}
                     </div>
-                </div>
+                </motion.div>
             </motion.div>
-
             {/* Quote */}
             <motion.div
                 className="absolute bottom-6 left-1/2 -translate-x-1/2 text-center w-full px-4"
@@ -230,7 +248,7 @@ export default function UnauthenticatedHomePage() {
                             whileTap="tap"
                         >
                             <Link
-                                href="/login"
+                                href="/signin"
                                 className="inline-flex items-center justify-center rounded-lg text-sm font-medium border border-border bg-background hover:bg-accent px-5 py-2.5 transition-colors duration-200"
                             >
                                 Log in
