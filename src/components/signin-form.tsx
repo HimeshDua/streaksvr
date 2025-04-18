@@ -63,7 +63,7 @@ export default function SigninForm({
 
         const data = await res.json();
         if (res.ok) {
-          router.push(`/profile/${data.username}`);
+          router.push("/");
         } else {
           console.error('Error fetching user:', data.error);
           setError('Failed to fetch user profile information.');
