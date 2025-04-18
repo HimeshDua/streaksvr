@@ -71,67 +71,83 @@ export default function AddTaskModal({ authorId }: { authorId: string }) {
     }
   }
 
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          className="flex flex-row justify-between items-center gap-1 pr-1 font-medium cursor-pointer text-base"
+          className="flex items-center gap-1 text-base font-medium"
           variant="ghost"
         >
           <Plus className="h-4 w-4" />
+          New Task
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="bg-card text-card-foreground p-6 rounded-xl border border-border">
+      <DialogContent className="bg-card p-6 rounded-2xl border border-border max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-foreground">
-            Create a new task
-          </DialogTitle>
+          <DialogTitle className="text-xl font-semibold">Create New Task</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleTaskSubmit} className="space-y-4">
-          <input
-            ref={titleInputRef}
-            type="text"
-            placeholder="Task title"
-            className="w-full rounded-md border border-border bg-input p-3 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-
-          <textarea
-            placeholder="Description (optional)"
-            className="w-full rounded-md border border-border bg-input p-3 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={3}
-          />
-
-          <div className="flex gap-4">
-            <select
-              className="flex-1 rounded-md border border-border bg-input p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              <option value="WORK">Work</option>
-              <option value="PERSONAL">Personal</option>
-              <option value="LEARNING">Learning</option>
-              <option value="PROJECT">OTHERS</option>
-            </select>
-
-            <select
-              className="flex-1 rounded-md border border-border bg-input p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-              value={priority}
-              onChange={(e) => setPriority(e.target.value)}
-            >
-              <option value="LOW">Low</option>
-              <option value="MEDIUM">Medium</option>
-              <option value="HIGH">High</option>
-            </select>
+        <form onSubmit={handleTaskSubmit} className="space-y-5">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">Title</label>
+            <input
+              ref={titleInputRef}
+              type="text"
+              placeholder="Write something productive..."
+              className="w-full rounded-lg border border-border bg-input p-3 text-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
           </div>
 
-          <Button type="submit" disabled={isLoading} className="w-full">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-foreground">Description</label>
+            <textarea
+              placeholder="Optional details"
+              className="w-full rounded-lg border border-border bg-input p-3 text-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={3}
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">Category</label>
+              <select
+                className="w-full rounded-lg border border-border bg-input p-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <option value="WORK">Work</option>
+                <option value="PERSONAL">Personal</option>
+                <option value="LEARNING">Learning</option>
+                <option value="OTHERS">Others</option>
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">Priority</label>
+              <select
+                className="w-full rounded-lg border border-border bg-input p-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                value={priority}
+                onChange={(e) => setPriority(e.target.value)}
+              >
+                <option value="LOW">Low</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="HIGH">High</option>
+              </select>
+            </div>
+          </div>
+
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="w-full mt-2 text-sm font-semibold"
+          >
             {isLoading ? (
               <span className="flex items-center justify-center gap-2">
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -145,4 +161,5 @@ export default function AddTaskModal({ authorId }: { authorId: string }) {
       </DialogContent>
     </Dialog>
   );
+
 }

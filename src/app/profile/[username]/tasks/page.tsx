@@ -67,7 +67,7 @@ export default function TaskDetailsPage() {
 
   // i think ui is good
   return (
-    <div className="w-full overflow-x-auto max-w-7xl mx-auto max-h-[500px] p-12">
+    <div className="w-full overflow-x-auto max-w-7xl mx-auto p-12">
       <h1 className="text-2xl font-bold tracking-tight text-foreground mb-4" style={{ color: 'var(--foreground)' }}>
         All Tasks
       </h1>
@@ -94,7 +94,7 @@ export default function TaskDetailsPage() {
             className="grid items-center min-w-[900px] grid-cols-[200px_100px_100px_150px_150px_200px_80px_1fr] gap-4 py-2 border-b text-sm w-fit"
 
           >
-            <span className="text-sm font-medium text-foreground w-[200px] truncate">{task.title}</span>
+            <span className="text-sm font-medium text-foreground w-[200px]">{task.title}</span>
             <Badge className={statusColorMap[task.status]}>{statusLabelMap[task.status]}</Badge>
             <Badge className={priorityColorMap[task.priority]}>{task.priority}</Badge>
             <span className="text-sm text-muted-foreground">{categoryLabelMap[task.category]}</span>
