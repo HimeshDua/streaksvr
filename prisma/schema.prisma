@@ -35,7 +35,6 @@ model Task {
   title       String
   description String?
   status      TaskStatus
-  isCompleted Boolean      @default(false)
   dueDate     DateTime?
   priority    TaskPriority @default(MEDIUM)
   category    TaskCategory @default(WORK)

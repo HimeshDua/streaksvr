@@ -23,7 +23,7 @@ interface ProfileInfoProps {
 
 const InfoItem = ({ label, value }: { label: string; value: React.ReactNode }) => (
   <div>
-    <h3 className="text-xs font-medium text-muted-foreground/70">{label}</h3>
+    <h3 className="text-xs truncate font-medium text-muted-foreground/70">{label}</h3>
     <p className="text-foreground break-words">{value}</p>
   </div>
 );
@@ -38,12 +38,12 @@ const ProfileInfo = ({ user, streak }: ProfileInfoProps) => {
 
       <div className="grid grid-cols-2 gap-x-6 gap-y-4 mb-6 text-sm">
         <InfoItem label="Email" value={user.email} />
-        <InfoItem label="Joined" value={formatTimeDifference(new Date(user.createdAt)).replace("ago", "before")} />
-        <InfoItem label="Tasks" value={user.tasksCount} />
-        <InfoItem label="Highest Streak" value={Number(streak?.longest) || 0} />
-        <InfoItem label="Current Count" value={Number(streak?.current) || 0} />
+        <InfoItem label="Member Since" value={formatTimeDifference(new Date(user.createdAt)).replace("ago", "ago")} />
+        <InfoItem label="Total Tasks" value={user.tasksCount} />
+        <InfoItem label="Longest Streak" value={Number(streak?.longest) || 0} />
+        <InfoItem label="Current Streak" value={Number(streak?.current) || 0} />
         <InfoItem
-          label="Last Active"
+          label="Last Streak Update"
           value={streak?.lastUpdated ? formatTimeDifference(streak.lastUpdated) : 'Not yet started'}
         />
       </div>

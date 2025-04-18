@@ -16,7 +16,6 @@ type Task = {
   title: string;
   description?: string | null;
   status: 'COMPLETED' | 'PENDING' | 'FAILED';
-  isCompleted: boolean;
   dueDate?: Date | null;
   priority: 'LOW' | 'MEDIUM' | 'HIGH';
   category: "WORK" | "PERSONAL" | "LEARNING" | "OTHERS"

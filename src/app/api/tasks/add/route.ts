@@ -32,13 +32,12 @@ async function POST(req: Request) {
         description,
         authorId: existingUser.id,
         status: 'PENDING',
-        isCompleted: false,
         category: category || 'WORK',
         priority: priority || 'MEDIUM'
       }
     });
 
-    const updateStreakData = await updateStreakOnTaskComplete(existingUser.id);
+    // const updateStreakData = await updateStreakOnTaskComplete(existingUser.id);.
 
     return NextResponse.json(newTask, {status: 201});
   } catch (error: any) {

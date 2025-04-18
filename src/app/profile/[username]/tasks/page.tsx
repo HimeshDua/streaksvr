@@ -9,7 +9,6 @@ type Task = {
   title: string;
   description?: string | null;
   status: 'COMPLETED' | 'PENDING' | 'FAILED';
-  isCompleted: boolean;
   dueDate?: string | null;
   priority: 'LOW' | 'MEDIUM' | 'HIGH';
   category: "WORK" | "PERSONAL" | "LEARNING" | "OTHERS"
@@ -68,7 +67,7 @@ export default function TaskDetailsPage() {
 
   // i think ui is good
   return (
-    <div className="w-full overflow-x-auto max-w-7xl mx-auto max-h-[500px] p-6">
+    <div className="w-full overflow-x-auto max-w-7xl mx-auto max-h-[500px] p-12">
       <h1 className="text-2xl font-bold tracking-tight text-foreground mb-4" style={{ color: 'var(--foreground)' }}>
         All Tasks
       </h1>
@@ -79,9 +78,8 @@ export default function TaskDetailsPage() {
           <span>Status</span>
           <span>Priority</span>
           <span>Category</span>
-          <span>Due Date</span>
           <span>Updated</span>
-          <span>Done</span>
+          {/* <span>Done</span> */}
           <span>Description</span>
         </div>
         {tasks?.length === 0 && (
@@ -96,23 +94,12 @@ export default function TaskDetailsPage() {
             className="grid items-center min-w-[900px] grid-cols-[200px_100px_100px_150px_150px_200px_80px_1fr] gap-4 py-2 border-b text-sm w-fit"
 
           >
-
             <span className="text-sm font-medium text-foreground w-[200px] truncate">{task.title}</span>
             <Badge className={statusColorMap[task.status]}>{statusLabelMap[task.status]}</Badge>
             <Badge className={priorityColorMap[task.priority]}>{task.priority}</Badge>
             <span className="text-sm text-muted-foreground">{categoryLabelMap[task.category]}</span>
-            {task.dueDate && (
-              <span className="text-sm text-muted-foreground">
-                Due: {new Date(task.dueDate).toLocaleDateString()}
-              </span>
-            )}
-            <span className="text-sm text-muted-foreground">
-              {formatTimeDifference(task.updatedAt)}
-            </span>
-            <span className="text-sm text-muted-foreground">Done: {task.isCompleted ? 'Yes' : 'No'}</span>
-            {task.description && (
-              <p className="text-sm text-muted-foreground whitespace-nowrap">{task.description}</p>
-            )}
+            <span className="text-sm text-muted-foreground">{formatTimeDifference(task.updatedAt)}</span>
+            <p className={`text-sm ${task.description ? "text-muted-foreground" : "text-red-500 italic"} whitespace-nowrap`}>{task.description || "No description provided"}</p>
           </div>
         ))}
       </div>
