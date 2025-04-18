@@ -4,6 +4,7 @@ import {prisma} from '@/lib/prisma';
 type TaskForm = {
   title: string;
   description: string;
+  status: 'COMPLETED' | 'PENDING' | 'FAILED';
 };
 
 export default async function updateTask(
@@ -15,7 +16,8 @@ export default async function updateTask(
       where: {id: taskId},
       data: {
         title: combinedData.title,
-        description: combinedData.description
+        description: combinedData.description,
+        status: combinedData.status
       }
     });
 

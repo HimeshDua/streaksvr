@@ -2,15 +2,9 @@
 
 import { useAuth } from '@/contexts/AuthContext';
 import HomeTasksSection from '@/components/HomeTasks';
-import HomeProfileMenu from '@/components/HomeProfileMenu';
 import UnauthenticatedHomePage from '@/components/UnAuthenticatedHomePage';
 import ProfileInfo from '@/components/ProfileInfo';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { ListTodo, LogOutIcon, UserIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { signOut } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+
 
 export default function HomePage() {
   const { isAuthenticated, userData, streaks } = useAuth();

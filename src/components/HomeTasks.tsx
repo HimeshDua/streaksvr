@@ -4,11 +4,13 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Skeleton } from './ui/skeleton';
 import formatTimeDifference from '@/hooks/formatTimeDifference';
 import AddTaskModal from './AddTaskModel';
-import { Edit, Check } from 'lucide-react';
+import { Edit, Check, ArrowRight, ArrowLeft } from 'lucide-react';
 import { Button } from './ui/button';
 import { useEffect, useState } from 'react';
 import UpperCaseFirstChar from '@/hooks/upperCaseFirstChar';
 import updateTask from '@/actions/updateTask.action';
+import { set } from 'date-fns';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from './ui/select';
 
 type Task = {
   id: string;
@@ -23,6 +25,10 @@ type Task = {
   authorId: string;
 };
 
+type StatusOptions = 'COMPLETED' | 'PENDING' | 'FAILED';
+
+
+
 export default function HomeTasksSection() {
   const { userData, tasks, setUpdatedTask } = useAuth();
   const [editingMode, setEditingMode] = useState(false);
@@ -31,10 +37,12 @@ export default function HomeTasksSection() {
   // initial inputs
   const [initialTitle, setInitialTitle] = useState<string | null | undefined>(null)
   const [initialDescription, setInitialDescription] = useState<string | undefined | null>(null)
+  const [initialStatus, setInitialStatus] = useState<StatusOptions>("PENDING")
 
   // edited inputs
   const [editedTitle, setEditedTitle] = useState<string | null | undefined>(null)
   const [editedDescription, setEditedDescription] = useState<string | undefined | null>(null)
+  const [editedStatus, setEditedStatus] = useState<StatusOptions>("PENDING")
 
   if (!userData) {
     return (
@@ -49,6 +57,7 @@ export default function HomeTasksSection() {
     if (thatTask) {
       setInitialTitle(thatTask.title);
       setInitialDescription(thatTask.description);
+      setInitialStatus(thatTask.status);
     }
   }, [editingTaskId, tasks.length]);
 
@@ -60,7 +69,9 @@ export default function HomeTasksSection() {
 
     if (!editingTaskId) return;
 
-    if ((initialTitle ?? '') === (editedTitle ?? '') && (initialDescription ?? '') === (editedDescription ?? '')) {
+    if ((initialTitle ?? '') === (editedTitle ?? '') &&
+      (initialDescription ?? '') === (editedDescription ?? '') &&
+      (initialStatus ?? "") === (editedStatus ?? "")) {
       setEditingMode(!editingMode);
       setEditingTaskId(null);
       setEditedTitle(null);
@@ -72,6 +83,7 @@ export default function HomeTasksSection() {
     const combinedData = {
       title: editedTitle || '',
       description: editedDescription || '',
+      status: editedStatus
     }
 
 
@@ -146,7 +158,8 @@ export default function HomeTasksSection() {
           </div>
         ) : (
           tasks.map((task, index) => (
-            <button
+            <div
+              role='button'
               className={`group flex flex-col gap-1 border backdrop-blur-md px-3 py-2 transition-all hover:shadow-sm w-full
               ${index === 0 && 'rounded-t-md'}
               ${index === tasks.length - 1 && 'rounded-b-md'}
@@ -157,9 +170,25 @@ export default function HomeTasksSection() {
 
               {editingMode ? (
                 editingTaskId === task.id ?
-                  <article className="grid grid-cols-2 text-[12px] justify-center items-center gap-2">
-                    <input className="text-sm font-medium text-foreground text-center" onChange={e => setEditedTitle(e.target.value)} value={editedTitle || task.title} />
-                    <input className="truncate px-2 text-center" onChange={e => setEditedDescription(e.target.value)} value={editedDescription ?? task.description ?? ''} />
+                  <article className="grid grid-cols-7 text-[12px] justify-center items-center gap-2">
+                    <input autoFocus className="col-span-3 text-sm font-medium text-foreground text-center" onChange={e => setEditedTitle(e.target.value)} value={editedTitle || task.title} />
+
+                    <input className="col-span-3 truncate px-2 text-center" onChange={e => setEditedDescription(e.target.value)} value={editedDescription ?? task.description ?? ''} />
+
+
+                    <Select value={editedStatus || task.status} onValueChange={(value: StatusOptions) => setEditedStatus(value)}>
+                      <SelectTrigger className="col-span-1 flex gap-1 items-center text-center justify-center">
+                        <SelectValue placeholder="Select a status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Task Status</SelectLabel>
+                          <SelectItem value="COMPLETED">Completed</SelectItem>
+                          <SelectItem value="PENDING">Pending</SelectItem>
+                          <SelectItem value="FAILED">Failed</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
 
                   </article> :
                   <article className="grid grid-cols-2 text-[12px] justify-center items-center gap-2">
@@ -190,7 +219,7 @@ export default function HomeTasksSection() {
                   </span>
                 </div>
               )}
-            </button>
+            </div>
           ))
         )}
       </div>
