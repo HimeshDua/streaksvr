@@ -9,7 +9,7 @@ import ProfileInfo from '@/components/ProfileInfo';
 export default function HomePage() {
   const { isAuthenticated, userData, streaks } = useAuth();
   if (!isAuthenticated) return <UnauthenticatedHomePage />;
-  const streakData = streaks[0]
+  const streakData = Array.isArray(streaks) ? streaks[0] : null;
 
 
 
@@ -27,20 +27,22 @@ export default function HomePage() {
               Build streaks. Crush goals. Stay consistent.
             </p>
             <div className="flex justify-center relative p-8">
-              <ProfileInfo
-                user={{
-                  name: userData.name,
-                  username: userData.username,
-                  email: userData.email,
-                  createdAt: userData.createdAt,
-                  tasksCount: userData.tasks?.length || 0,
-                }}
-                streak={{
-                  current: Number(streakData.current),
-                  longest: Number(streakData.longest),
-                  lastUpdated: streakData.lastUpdated ? new Date(streakData.lastUpdated) : null,
-                }}
-              />
+              {userData && streakData && (
+                <ProfileInfo
+                  user={{
+                    name: userData.name,
+                    username: userData.username,
+                    email: userData.email,
+                    createdAt: userData.createdAt,
+                    tasksCount: userData.tasks?.length || 0,
+                  }}
+                  streak={{
+                    current: Number(streakData.current),
+                    longest: Number(streakData.longest),
+                    lastUpdated: streakData.lastUpdated ? new Date(streakData.lastUpdated) : null,
+                  }}
+                />
+              )}
             </div>
           </div>
 

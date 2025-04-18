@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Loader2, Plus } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import latestTaskDisplay from '@/actions/latestTaskDisplay';
 
 export default function AddTaskModal({ authorId }: { authorId: string }) {
   const [title, setTitle] = useState('');
@@ -19,7 +20,7 @@ export default function AddTaskModal({ authorId }: { authorId: string }) {
   const [priority, setPriority] = useState('MEDIUM');
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  // const { setUpdatedTask } = useAuth();
+  const { refreshUserData } = useAuth();
   const titleInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -51,6 +52,10 @@ export default function AddTaskModal({ authorId }: { authorId: string }) {
 
       if (!res.ok) throw new Error('Failed to submit task');
       // const data = await res.json();
+      // latestTaskDisplay(data);
+      refreshUserData()
+      // console.log('Task created successfully:', data);
+
 
       // await setUpdatedTask(data);
       setOpen(false);

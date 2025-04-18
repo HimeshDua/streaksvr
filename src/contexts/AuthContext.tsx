@@ -8,6 +8,7 @@ import React, {
 } from 'react';
 import { auth } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
+import { updateStreakOnTaskComplete } from '@/actions/updateStreak.action';
 // import { updateStreakOnTaskComplete } from '@/actions/updateStreak.action';
 
 // Define the types
@@ -42,11 +43,12 @@ type AuthContextType = {
     streaks: Streaks[];
     createdAt: string;
     updatedAt: string
-  };
+  } | null;
   loading: boolean;
   error: string | null;
   tasks: Task[];
-  streaks: Streaks[];
+  streaks: Streaks | null;
+  refreshUserData: () => Promise<void>;
   setUpdatedTask: React.Dispatch<React.SetStateAction<Task | undefined>>;
   isAuthenticated: boolean;
 };
@@ -55,29 +57,24 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [userData, setUserData] = useState<any>(null);
+  const [userData, setUserData] = useState<AuthContextType["userData"] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [streaks, setStreaks] = useState<Streaks[]>([]);
-  const [UpdatedTask, setUpdatedTask] = useState<Task | undefined>(); // Initialized as undefined
+  const [streaks, setStreaks] = useState<Streaks | null>(null);
+  const [updatedTask, setUpdatedTask] = useState<Task | undefined>(); // Initialized as undefined
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    setTasks((prevTasks) => {
-      if (UpdatedTask) {
-        const index = prevTasks.findIndex(task => task.id === UpdatedTask.id);
-        if (index !== -1) {
-          const newTasks = [...prevTasks];
-          newTasks[index] = UpdatedTask;
-          return newTasks;
-        } else {
-          return [...prevTasks, UpdatedTask];
-        }
-      }
-      return prevTasks;
-    });
-  }, [UpdatedTask]);
+    if (!updatedTask) return;
+
+    setTasks(prev =>
+      prev.some(task => task.id === updatedTask.id)
+        ? prev.map(task => task.id === updatedTask.id ? updatedTask : task)
+        : [...prev, updatedTask]
+    );
+  }, [updatedTask]);
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
@@ -104,7 +101,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setTasks(combinedUserData.tasks || []);
             setStreaks(combinedUserData.streaks || []);
 
-            // updateStreakOnTaskComplete(userData.id)
           } else {
             setError(dbUserData?.message || 'Failed to fetch user');
             setUserData(null);
@@ -131,6 +127,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => unsubscribe();
   }, []);
 
+  const refreshUserData = async () => {
+    if (!userData?.firebaseId) return;
+    try {
+      const res = await fetch('/api/user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firebaseId: userData.firebaseId })
+      });
+      const dbUserData = await res.json();
+      if (res.ok) {
+        const combinedUserData = {
+          firebaseId: userData.firebaseId,
+          email: userData.email,
+          emailVerified: userData.emailVerified,
+          ...dbUserData
+        };
+        setUserData(combinedUserData);
+        setTasks(combinedUserData.tasks || []);
+        setStreaks(combinedUserData.streaks || []);
+      }
+    } catch (err) {
+      console.error('Failed to refresh user', err);
+    }
+  };
+
+
+
   const contextValue = {
     userData,
     loading,
@@ -138,6 +161,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     tasks,
     streaks,
     setUpdatedTask,
+    refreshUserData,
     isAuthenticated
   };
 
