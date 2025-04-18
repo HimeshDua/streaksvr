@@ -6,10 +6,10 @@ import ProfileInfo from '@/components/ProfileInfo';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function UserProfile() {
-  const { userData, tasks, error, streaks } = useAuth();
+  const { userData, error, streaks } = useAuth();
   const { username: usernameFromParams } = useParams();
   const router = useRouter();
-  const streakData = streaks[0];
+  const streakData = Array.isArray(streaks) ? streaks[0] : null;
 
   useEffect(() => {
     if (userData && userData.username !== usernameFromParams) {

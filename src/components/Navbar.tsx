@@ -26,6 +26,7 @@ function Navbar() {
   const { userData } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+
   return (
     <header className="backdrop-blur-2xl mx-auto border-b border-border sticky top-0 z-50">
       <div className="container flex items-center justify-between h-16 px-4">
@@ -47,7 +48,7 @@ function Navbar() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="flex items-center gap-2">
                 <UserIcon className="w-4 h-4" />
-                <span>{userData.name}</span>
+                <span>{userData?.name}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -58,13 +59,13 @@ function Navbar() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href={`/profile/${userData.username}`} className="flex items-center gap-2">
+                <Link href={`/profile/${userData?.username}`} className="flex items-center gap-2">
                   <UserIcon className="w-4 h-4" />
                   Profile
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href={`/profile/${userData.username}/tasks`} className="flex items-center gap-2">
+                <Link href={`/profile/${userData?.username}/tasks`} className="flex items-center gap-2">
                   <ListTodo className="w-4 h-4" />
                   Tasks
                 </Link>
@@ -113,14 +114,14 @@ function Navbar() {
             </Button>
 
             <Button variant="ghost" asChild className="justify-start gap-3">
-              <Link href={`/profile/${userData.username}`}>
+              <Link href={`/profile/${userData?.username}`}>
                 <UserIcon className="w-4 h-4" />
                 Profile
               </Link>
             </Button>
 
             <Button variant="ghost" asChild className="justify-start gap-3">
-              <Link href={`/profile/${userData.username}/tasks`}>
+              <Link href={`/profile/${userData?.username}/tasks`}>
                 <ListTodo className="w-4 h-4" />
                 Tasks
               </Link>
