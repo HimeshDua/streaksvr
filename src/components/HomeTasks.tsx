@@ -25,7 +25,7 @@ type Task = {
   authorId: string;
 };
 
-type StatusOptions = 'COMPLETED' | 'PENDING' | 'FAILED';
+type StatusOptions = 'COMPLETED' | 'PENDING' | 'FAILED' | null;
 
 
 
@@ -37,12 +37,12 @@ export default function HomeTasksSection() {
   // initial inputs
   const [initialTitle, setInitialTitle] = useState<string | null | undefined>(null)
   const [initialDescription, setInitialDescription] = useState<string | undefined | null>(null)
-  const [initialStatus, setInitialStatus] = useState<StatusOptions>("PENDING")
+  const [initialStatus, setInitialStatus] = useState<StatusOptions>(null)
 
   // edited inputs
   const [editedTitle, setEditedTitle] = useState<string | null | undefined>(null)
   const [editedDescription, setEditedDescription] = useState<string | undefined | null>(null)
-  const [editedStatus, setEditedStatus] = useState<StatusOptions>("PENDING")
+  const [editedStatus, setEditedStatus] = useState<StatusOptions>(null)
 
   if (!userData) {
     return (
@@ -83,7 +83,7 @@ export default function HomeTasksSection() {
     const combinedData = {
       title: editedTitle || '',
       description: editedDescription || '',
-      status: editedStatus
+      status: editedStatus ?? "PENDING"
     }
 
 
@@ -175,9 +175,8 @@ export default function HomeTasksSection() {
 
                     <input className="col-span-3 truncate px-2 text-center" onChange={e => setEditedDescription(e.target.value)} value={editedDescription ?? task.description ?? ''} />
 
-
-                    <Select value={editedStatus || task.status} onValueChange={(value: StatusOptions) => setEditedStatus(value)}>
-                      <SelectTrigger className="col-span-1 flex gap-1 items-center text-center justify-center">
+                    <Select value={editedStatus || task.status} onValueChange={(value: string) => setEditedStatus(value as StatusOptions)}>
+                      <SelectTrigger className="col-span-1 border-accent-foreground/30 rounded-sm flex gap-1 items-center text-center justify-center">
                         <SelectValue placeholder="Select a status" />
                       </SelectTrigger>
                       <SelectContent>
