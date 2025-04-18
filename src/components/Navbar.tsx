@@ -29,7 +29,7 @@ function Navbar() {
 
   return (
     <header className="backdrop-blur-2xl mx-auto border-b border-border sticky top-0 z-50">
-      <div className="container flex items-center justify-between h-16 px-4">
+      <div className="container flex items-center justify-between h-16 px-4 mx-auto">
         {/* Logo / Title */}
         <Link href="/" className="font-bold text-lg">
           Streaksvr
