@@ -24,6 +24,11 @@ export default function AddTaskModal({ authorId }: { authorId: string }) {
   const titleInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    if (authorId === "") {
+      console.error('Author ID is not provided');
+      return;
+    }
+
     if (open && titleInputRef.current) {
       titleInputRef.current.focus();
     } else {
