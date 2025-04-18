@@ -11,7 +11,9 @@ import { Button } from '@/components/ui/button';
 import { Loader2, Plus } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import latestTaskDisplay from '@/actions/latestTaskDisplay';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Textarea } from './ui/textarea';
+import { Input } from './ui/input';
 
 export default function AddTaskModal({ authorId }: { authorId: string }) {
   const [title, setTitle] = useState('');
@@ -59,10 +61,7 @@ export default function AddTaskModal({ authorId }: { authorId: string }) {
       // const data = await res.json();
       // latestTaskDisplay(data);
       refreshUserData()
-      // console.log('Task created successfully:', data);
 
-
-      // await setUpdatedTask(data);
       setOpen(false);
     } catch (error) {
       console.error('Error submitting task:', error);
@@ -71,43 +70,41 @@ export default function AddTaskModal({ authorId }: { authorId: string }) {
     }
   }
 
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          className="flex items-center gap-1 text-base font-medium"
           variant="ghost"
+          className="flex items-center gap-1 text-base font-medium hover:bg-accent/40 transition"
         >
           <Plus className="h-4 w-4" />
           New Task
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="bg-card p-6 rounded-2xl border border-border max-w-md">
+      <DialogContent className="bg-background p-6 rounded-2xl border border-border max-w-md transition-all duration-300">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">Create New Task</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleTaskSubmit} className="space-y-5">
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Title</label>
-            <input
+        <form onSubmit={handleTaskSubmit} className="grid gap-4 mt-4">
+          <div className="grid gap-2">
+            <label className="text-sm font-medium">Title</label>
+            <Input
+              className="bg-input/10 placeholder-muted-foreground"
               ref={titleInputRef}
-              type="text"
-              placeholder="Write something productive..."
-              className="w-full rounded-lg border border-border bg-input p-3 text-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              placeholder="e.g. Finish dashboard UI"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
             />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Description</label>
-            <textarea
-              placeholder="Optional details"
-              className="w-full rounded-lg border border-border bg-input p-3 text-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+          <div className="grid gap-2">
+            <label className="text-sm font-medium">Description</label>
+            <Textarea
+              className="bg-input/10 placeholder-muted-foreground"
+              placeholder="Add details (optional)"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
@@ -115,38 +112,40 @@ export default function AddTaskModal({ authorId }: { authorId: string }) {
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">Category</label>
-              <select
-                className="w-full rounded-lg border border-border bg-input p-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              >
-                <option value="WORK">Work</option>
-                <option value="PERSONAL">Personal</option>
-                <option value="LEARNING">Learning</option>
-                <option value="OTHERS">Others</option>
-              </select>
+            <div className="grid gap-2">
+              <label className="text-sm font-medium">Category</label>
+              <Select value={category} onValueChange={setCategory}>
+                <SelectTrigger className='w-full bg-input/10'>
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent >
+                  <SelectItem value="WORK">Work</SelectItem>
+                  <SelectItem value="PERSONAL">Personal</SelectItem>
+                  <SelectItem value="LEARNING">Learning</SelectItem>
+                  <SelectItem value="OTHERS">Others</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">Priority</label>
-              <select
-                className="w-full rounded-lg border border-border bg-input p-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                value={priority}
-                onChange={(e) => setPriority(e.target.value)}
-              >
-                <option value="LOW">Low</option>
-                <option value="MEDIUM">Medium</option>
-                <option value="HIGH">High</option>
-              </select>
+            <div className="grid gap-2">
+              <label className="text-sm font-medium">Priority</label>
+              <Select value={priority} onValueChange={setPriority}>
+                <SelectTrigger className='w-full bg-input/10'>
+                  <SelectValue placeholder="Select priority" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="LOW">Low</SelectItem>
+                  <SelectItem value="MEDIUM">Medium</SelectItem>
+                  <SelectItem value="HIGH">High</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
           <Button
             type="submit"
             disabled={isLoading}
-            className="w-full mt-2 text-sm font-semibold"
+            className="w-full mt-2 text-sm font-semibold transition active:scale-[0.98]"
           >
             {isLoading ? (
               <span className="flex items-center justify-center gap-2">

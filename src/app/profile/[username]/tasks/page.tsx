@@ -65,44 +65,71 @@ export default function TaskDetailsPage() {
     );
   }
 
+  // className = "grid items-center min-w-[900px] grid-cols-[200px_100px_100px_150px_150px_200px_80px_1fr] gap-4 py-2 border-b text-sm w-fit"
+
   // i think ui is good
   return (
-    <div className="w-full overflow-x-auto max-w-7xl mx-auto p-12">
+    <div className="w-full overflow-x-auto max-w-7xl mx-auto px-2 py-4 sm:p-12">
       <h1 className="text-2xl font-bold tracking-tight text-foreground mb-4" style={{ color: 'var(--foreground)' }}>
         All Tasks
       </h1>
 
-      <div className="overflow-y-auto border rounded-md p-4">
-        <div className="min-w-[900px] grid grid-cols-[200px_100px_100px_150px_150px_200px_80px_1fr] gap-4 text-xs font-medium text-muted-foreground uppercase border-b w-fit pb-2">
+      <div className="overflow-y-auto border rounded-md p-4 space-y-4">
+        <div className="hidden md:grid grid-cols-[200px_100px_100px_150px_150px_200px_80px_1fr] gap-4 text-xs font-medium text-muted-foreground uppercase border-b pb-2">
           <span>Title</span>
           <span>Status</span>
           <span>Priority</span>
           <span>Category</span>
           <span>Updated</span>
-          {/* <span>Done</span> */}
           <span>Description</span>
         </div>
+
         {tasks?.length === 0 && (
           <div className="text-muted-foreground">No tasks available.</div>
         )}
 
-
         {tasks?.map((task) => (
-
-          <div
+          <span
             key={task.id}
-            className="grid items-center min-w-[900px] grid-cols-[200px_100px_100px_150px_150px_200px_80px_1fr] gap-4 py-2 border-b text-sm w-fit"
-
           >
-            <span className="text-sm font-medium text-foreground w-[200px]">{task.title}</span>
-            <Badge className={statusColorMap[task.status]}>{statusLabelMap[task.status]}</Badge>
-            <Badge className={priorityColorMap[task.priority]}>{task.priority}</Badge>
-            <span className="text-sm text-muted-foreground">{categoryLabelMap[task.category]}</span>
-            <span className="text-sm text-muted-foreground">{formatTimeDifference(task.updatedAt)}</span>
-            <p className={`text-sm ${task.description ? "text-muted-foreground" : "text-red-500 italic"} whitespace-nowrap`}>{task.description || "No description provided"}</p>
-          </div>
+
+            {/* Mobile: stacked layout */}
+            <div className="md:hidden border rounded-lg p-4 space-y-1.5 mb-4 text-sm bg-background shadow-sm">
+              <div className="text-base font-semibold text-foreground">{task.title}</div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge className={statusColorMap[task.status]}>{statusLabelMap[task.status]}</Badge>
+                <Badge className={priorityColorMap[task.priority]}>{task.priority}</Badge>
+                <span className="text-xs text-muted-foreground">{categoryLabelMap[task.category]}</span>
+              </div>
+
+              <div className="text-xs text-muted-foreground">
+                <span className="font-medium text-foreground">Updated:</span> {formatTimeDifference(task.updatedAt)}
+              </div>
+
+              <div
+                className={`text-sm leading-snug ${task.description ? "text-muted-foreground" : "text-red-500 italic"}`}>
+                {task.description || "No description provided"}
+              </div>
+            </div>
+
+
+
+            {/* Desktop layout */}
+            <div
+              className="hidden md:grid items-center min-w-[900px] grid-cols-[200px_100px_100px_150px_150px_200px_80px_1fr] gap-4 py-2 border-b text-sm w-fit">
+              <span className="text-sm font-medium text-foreground w-[200px]">{task.title}</span>
+              <Badge className={statusColorMap[task.status]}>{statusLabelMap[task.status]}</Badge>
+              <Badge className={priorityColorMap[task.priority]}>{task.priority}</Badge>
+              <span className="text-sm text-muted-foreground">{categoryLabelMap[task.category]}</span>
+              <span className="text-sm text-muted-foreground">{formatTimeDifference(task.updatedAt)}</span>
+              <p className={`text-sm ${task.description ? "text-muted-foreground" : "text-red-500 italic"} whitespace-nowrap`}>{task.description || "No description provided"}</p>
+            </div>
+
+          </span>
         ))}
       </div>
+
 
     </div >
   );
