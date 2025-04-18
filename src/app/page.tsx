@@ -27,7 +27,7 @@ export default function HomePage() {
               Build streaks. Crush goals. Stay consistent.
             </p>
             <div className="flex justify-center relative p-8">
-              {userData && streakData && (
+              {userData && (
                 <ProfileInfo
                   user={{
                     name: userData.name,
@@ -37,9 +37,9 @@ export default function HomePage() {
                     tasksCount: userData.tasks?.length || 0,
                   }}
                   streak={{
-                    current: Number(streakData.current),
-                    longest: Number(streakData.longest),
-                    lastUpdated: streakData.lastUpdated ? new Date(streakData.lastUpdated) : null,
+                    current: Number(streakData?.current),
+                    longest: Number(streakData?.longest),
+                    lastUpdated: streakData?.lastUpdated ? new Date(streakData.lastUpdated) : null,
                   }}
                 />
               )}
