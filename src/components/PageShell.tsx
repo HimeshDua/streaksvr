@@ -6,37 +6,27 @@ import Navbar from './Navbar';
 import UnauthenticatedNavbar from './UnAuthNavbar';
 import { useAuth } from '@/contexts/AuthContext';
 import Footer from './Footer';
-import { Button } from '@/components/ui/button';
-import { motion } from 'framer-motion';
-import LoadingPage from './LoadingPage'; // Corrected import
-import NotFoundPage from './NotFound';
+import LoadingPage from './LoadingPage';
+import NotFoundPage from './NotFoundPage';
 
-// Constants for allowed paths.  Using constants improves performance and readability
 const UNAUTHENTICATED_PATHS = ['/', '/login', '/register'];
-const AUTHENTICATED_PATHS = [
-  '/',
-  "/profile/",
-  '/login',
-  '/register',
-];
+const AUTHENTICATED_PATHS = ['/', "/profile/", '/login', '/register'];
 
 export default function PageShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { userData, loading, isAuthenticated } = useAuth();
-  const username = userData?.username;
+  const { loading, isAuthenticated } = useAuth();
 
   const is404 = useMemo(() => {
     if (loading) return false;
 
     if (isAuthenticated) {
       return !AUTHENTICATED_PATHS.some(authPath =>
-        pathname === authPath ||
-        (username && pathname.startsWith('/profile/'))
+        pathname === authPath || (pathname.startsWith('/profile/'))
       );
     } else {
       return !UNAUTHENTICATED_PATHS.includes(pathname);
     }
-  }, [pathname, isAuthenticated, username, loading]);
+  }, [pathname, isAuthenticated, loading]);
 
   if (is404) {
     return (

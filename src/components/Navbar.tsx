@@ -9,16 +9,33 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { signOut } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from './ui/sheet';
 import { useAuth } from '@/contexts/AuthContext';
 import { useState } from 'react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { signOut } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
+import { auth } from '@/lib/firebase';
 
 function Navbar() {
   const { userData } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+
+  const handleLogoutButtonClick = () => {
+    setShowLogoutDialog(true);
+    setIsMobileMenuOpen(false); // Close mobile menu if open
+  };
+
+  const handleCloseLogoutDialog = () => {
+    setShowLogoutDialog(false)
+  };
 
   return (
     <header className="backdrop-blur-2xl mx-auto border-b border-border sticky top-0 z-50">
@@ -27,6 +44,31 @@ function Navbar() {
         <Link href="/" className="font-bold text-lg">
           Streaksvr
         </Link>
+
+
+        {/* Logout Dialog + Overlay */}
+        {showLogoutDialog && (
+          <div className='fixed overflow-hidden inset-0 z-50 h-screen w-screen flex items-center justify-center bg-black/50'
+            onClick={handleCloseLogoutDialog}>
+
+            <div
+              className="bg-background border border-border text-foreground rounded-xl shadow-2xl w-full max-w-md p-6 mx-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 className="text-xl font-semibold tracking-tight">Confirm Logout</h3>
+              <p className="mt-2 text-sm text-muted-foreground">Are you sure you want to logout?</p>
+              <div className="flex justify-end gap-2 mt-6">
+                <button
+                  className="px-4 py-2 h-10 text-sm border border-input rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
+                  onClick={handleCloseLogoutDialog}
+                >
+                  Cancel
+                </button>
+                <SimpleLogoutDialogInternal onClose={handleCloseLogoutDialog} />
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Desktop Navigation */}
         <nav className="hidden sm:flex items-center space-x-4">
@@ -64,17 +106,9 @@ function Navbar() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <button
-                  onClick={async () => {
-                    await signOut(auth);
-                    window.location.href = '/';
-                  }}
-                  className="flex items-center gap-2 w-full text-left"
-                >
-                  <LogOutIcon className="w-4 h-4" />
-                  Log out
-                </button>
+              <DropdownMenuItem onClick={handleLogoutButtonClick}>
+                <LogOutIcon className="mr-2 h-4 w-4" />
+                Log out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -123,11 +157,7 @@ function Navbar() {
             <Button
               variant="ghost"
               className="justify-start w-full"
-              onClick={async () => {
-                await signOut(auth);
-                setIsMobileMenuOpen(false);
-                window.location.href = '/';
-              }}
+              onClick={handleLogoutButtonClick}
             >
               <LogOutIcon className="w-4 h-4 mr-2" />
               Log out
@@ -138,5 +168,32 @@ function Navbar() {
     </header>
   );
 }
+
+// Internal component to handle the actual logout logic
+const
+  SimpleLogoutDialogInternal = ({ onClose }: { onClose: () => void }) => {
+    const router = useRouter();
+
+    const handleConfirmLogout = async () => {
+      try {
+        await signOut(auth);
+        console.log('Successfully logged out.');
+        onClose();
+        router.push('/');
+      } catch (error) {
+        console.error('Error during logout:', error);
+        alert('An error occurred during logout.');
+      }
+    };
+
+    return (
+      <button
+        className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-red-500 text-white hover:bg-red-600 h-10 px-4 py-2"
+        onClick={handleConfirmLogout}
+      >
+        Logout
+      </button>
+    );
+  };
 
 export default Navbar;

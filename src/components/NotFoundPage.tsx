@@ -1,6 +1,3 @@
-// app/not-found.tsx (Next.js)
-// or NotFound.tsx in a regular React app
-
 "use client"
 
 import { Button } from "@/components/ui/button"
