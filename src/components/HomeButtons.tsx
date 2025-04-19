@@ -14,7 +14,7 @@ function HomeButtons() {
 
     useEffect(() => {
         if (!loading && !userData) {
-            router.push('/signin');
+            router.push('/login');
         }
 
         if (!loading && userData && !userData.username) {

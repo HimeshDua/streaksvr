@@ -25,7 +25,7 @@ interface UserData {
   name: string;
 }
 
-export default function SigninForm({
+export default function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'div'>) {
@@ -41,7 +41,7 @@ export default function SigninForm({
     setIsDisabled(false); // Enable the form after mounting
   }, []);
 
-  const handleSignin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
@@ -55,7 +55,7 @@ export default function SigninForm({
       const user = userCredential.user;
 
       if (user) {
-        const res = await fetch('/api/auth/signin', {
+        const res = await fetch('/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ firebaseId: user.uid })
@@ -87,7 +87,7 @@ export default function SigninForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSignin}>
+          <form onSubmit={handleLogin}>
             <div className="flex flex-col gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
@@ -138,12 +138,12 @@ export default function SigninForm({
                 className="w-full"
                 disabled={loading || isDisabled}
               >
-                {loading ? 'Signing in...' : 'Sign In'}
+                {loading ? 'Logging in...' : 'Login In'}
               </Button>
             </div>
             <p className="mt-4 text-center text-sm text-muted-foreground">
               Don't have an account?{' '}
-              <Link className="hover:underline" href={'/signup'}>
+              <Link className="hover:underline" href={'/register'}>
                 Create one
               </Link>
             </p>

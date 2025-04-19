@@ -13,9 +13,8 @@ type TaskForm = {
 async function POST(req: Request) {
   const body = await req.json();
   const {taskId, title, description, status}: TaskForm = body;
-  // Validate the input data
   if (!taskId) {
-    return new NextResponse('Task ID is required', {status: 400}); // Return an error response
+    return new NextResponse('Task ID is required', {status: 400});
   }
 
   try {
@@ -28,14 +27,14 @@ async function POST(req: Request) {
       }
     });
 
-    // if (status === 'COMPLETED') {
-    //   await updateStreakOnTaskComplete(updatedTask.authorId);
-    // }
+    if (status === 'COMPLETED') {
+      await updateStreakOnTaskComplete(updatedTask.authorId);
+    }
 
-    return NextResponse.json(updatedTask); // Wrap the successful response in NextResponse.json()
+    return NextResponse.json(updatedTask);
   } catch (error) {
     console.error('Error updating task:', error);
-    return new NextResponse('Failed to update task', {status: 500}); // Return an error response
+    return new NextResponse('Failed to update task', {status: 500});
   }
 }
 

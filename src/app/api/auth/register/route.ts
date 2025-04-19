@@ -110,7 +110,7 @@ export async function POST(req: NextRequest) {
       );
     }
   } catch (globalError: any) {
-    console.error('Unhandled error in signup API:', globalError);
+    console.error('Unhandled error in register API:', globalError);
     return NextResponse.json({error: 'Internal server error'}, {status: 500});
   }
 }

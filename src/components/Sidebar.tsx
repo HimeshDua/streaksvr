@@ -122,7 +122,7 @@ const Sidebar = React.memo(function Sidebar() {
     );
   } else {
     userSectionContent = (
-      <Link href="/signin">
+      <Link href="/login">
         <Button variant="outline" className="w-full">
           Sign In
         </Button>

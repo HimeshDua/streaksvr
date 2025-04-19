@@ -16,7 +16,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 
-export default function SignupForm({
+export default function RegisterForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'div'>) {
@@ -43,7 +43,7 @@ export default function SignupForm({
     return () => clearTimeout(timer);
   }, [setError, error]);
 
-  const handleSignup = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -65,7 +65,7 @@ export default function SignupForm({
     }
 
     try {
-      const response = await fetch('/api/auth/signup', {
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -83,7 +83,7 @@ export default function SignupForm({
       if (response.ok) {
         router.push('/');
       } else {
-        setError(data.error || 'Signup failed');
+        setError(data.error || 'Registeration failed');
       }
     } finally {
       setLoading(false);
@@ -100,7 +100,7 @@ export default function SignupForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSignup}>
+          <form onSubmit={handleRegister}>
             <div className="flex flex-col gap-4">
               <div className="grid grid-cols-2 gap-2">
                 <div className="grid gap-2">
@@ -216,7 +216,7 @@ export default function SignupForm({
             </div>
             <p className="mt-4 text-center text-sm text-muted-foreground">
               Already have an account?{' '}
-              <Link className="hover:underline" href={'/signin'}>
+              <Link className="hover:underline" href={'/login'}>
                 Login
               </Link>
             </p>

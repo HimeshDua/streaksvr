@@ -1,4 +1,4 @@
-const SSRLoadingPage = () => {
+const LoadingPage = () => {
     return (
         <div className="min-h-screen bg-background py-10 flex flex-col justify-center items-center">
             <div className="flex justify-center scale-50 items-center">
@@ -8,4 +8,4 @@ const SSRLoadingPage = () => {
     );
 };
 
-export default SSRLoadingPage;
+export default LoadingPage;

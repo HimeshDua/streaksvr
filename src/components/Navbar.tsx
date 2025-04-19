@@ -5,27 +5,20 @@ import {
   ListTodo,
   LogOutIcon,
   MenuIcon,
-  UserIcon
+  UserIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { useState } from 'react';
 import Link from 'next/link';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from './ui/sheet';
 import { useAuth } from '@/contexts/AuthContext';
+import { useState } from 'react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu';
 
 function Navbar() {
   const { userData } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
 
   return (
     <header className="backdrop-blur-2xl mx-auto border-b border-border sticky top-0 z-50">
@@ -99,29 +92,29 @@ function Navbar() {
         </Button>
       </div>
 
-      {/* Mobile Menu (Sheet) */}
+      {/* Mobile Menu (Sheet - Modified) */}
       <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-        <SheetContent side="left" className="w-full sm:w-64">
+        <SheetContent side="left" className="w-56 sm:w-64">
           <SheetHeader>
             <SheetTitle>Menu</SheetTitle>
           </SheetHeader>
-          <nav className="flex flex-col space-y-4 mt-6">
-            <Button variant="ghost" asChild className="justify-start gap-3">
-              <Link href="/">
+          <nav className="flex flex-col space-y-2 mt-6">
+            <Button variant="ghost" asChild className="justify-start">
+              <Link href="/" className="flex items-center gap-2 w-full">
                 <HomeIcon className="w-4 h-4" />
                 Home
               </Link>
             </Button>
 
-            <Button variant="ghost" asChild className="justify-start gap-3">
-              <Link href={`/profile/${userData?.username}`}>
+            <Button variant="ghost" asChild className="justify-start">
+              <Link href={`/profile/${userData?.username}`} className="flex items-center gap-2 w-full">
                 <UserIcon className="w-4 h-4" />
                 Profile
               </Link>
             </Button>
 
-            <Button variant="ghost" asChild className="justify-start gap-3">
-              <Link href={`/profile/${userData?.username}/tasks`}>
+            <Button variant="ghost" asChild className="justify-start">
+              <Link href={`/profile/${userData?.username}/tasks`} className="flex items-center gap-2 w-full">
                 <ListTodo className="w-4 h-4" />
                 Tasks
               </Link>
@@ -129,14 +122,14 @@ function Navbar() {
 
             <Button
               variant="ghost"
-              className="justify-start gap-3"
+              className="justify-start w-full"
               onClick={async () => {
                 await signOut(auth);
                 setIsMobileMenuOpen(false);
                 window.location.href = '/';
               }}
             >
-              <LogOutIcon className="w-4 h-4" />
+              <LogOutIcon className="w-4 h-4 mr-2" />
               Log out
             </Button>
           </nav>

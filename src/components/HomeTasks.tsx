@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 type StatusOptions = 'COMPLETED' | 'PENDING' | 'FAILED' | null;
 
 export default function HomeTasksSection() {
-  const { userData, tasks, setUpdatedTask, setStreaks } = useAuth();
+  const { userData, tasks, setUpdatedTask } = useAuth();
   const [editingMode, setEditingMode] = useState(false);
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
 
@@ -83,8 +83,6 @@ export default function HomeTasksSection() {
         })
         const updatedTaskFromServer = await res.json()
         if (res.ok) {
-          const updatedStreak = updatedTaskFromServer.streaks;
-          setStreaks(updatedStreak);
           setUpdatedTask(updatedTaskFromServer);
         }
         else {
@@ -143,25 +141,33 @@ export default function HomeTasksSection() {
             onClick={!editingMode || !editingTaskId ? () => setEditingMode(!editingMode) : undefined}
           >
             {editingMode ? (
-              <>
-                {editingMode && editingTaskId ?
-                  <span className='flex items-center justify-between'>
-                    <Button variant="ghost" className='flex items-center gap-1 cursor-pointer text-base font-medium hover:bg-accent/40 transition' onClick={handleEditingMode}><Check className="h-4 w-4" />Done</Button>
-                    <Button variant="ghost" className='flex items-center gap-1  cursor-pointer text-base font-medium hover:bg-accent/40 transition' onClick={handleCancelEdit}><X className="h-4 w-4" />Cancel</Button>
-                  </span>
-                  :
+              <span className='flex items-center justify-between'>
+                {editingMode && editingTaskId ? (
+                  <>
+                    <Button variant="ghost" className='flex items-center gap-1 cursor-pointer text-base font-medium hover:bg-accent/40 transition' onClick={handleEditingMode}>
+                      <Check className="h-4 w-4" />Done
+                    </Button>
+                    <Button variant="ghost" className='flex items-center gap-1 cursor-pointer text-base font-medium hover:bg-accent/40 transition' onClick={handleCancelEdit}>
+                      <X className="h-4 w-4" />Cancel
+                    </Button>
+                  </>
+                ) : (
                   <Button variant="ghost" onClick={() => setEditingMode(false)} className='cursor-pointer text-base font-medium hover:bg-accent/40 transition' >
-                    <X className='h-4 w-4' />Cancel </Button>
-                }
-              </>
+                    <X className='h-4 w-4' />Cancel
+                  </Button>
+                )}
+              </span>
             ) : (
-              <Button variant="ghost" className='cursor-pointer text-base font-medium hover:bg-accent/40 transition' >
+              <span // Changed Button to span
+                onClick={() => setEditingMode(true)} // Move the onClick to the span
+                className='flex items-center gap-1 cursor-pointer text-base font-medium hover:bg-accent/40 transition'
+              >
                 <Edit className="h-4 w-4" />
                 Edit
-              </Button>
+              </span>
             )
             }
-          </Button >
+          </Button>
         </article >
       </article >
 

@@ -236,7 +236,7 @@ export default function UnauthenticatedHomePage() {
                             whileTap="tap"
                         >
                             <Link
-                                href="/signup"
+                                href="/register"
                                 className="inline-flex items-center justify-center rounded-lg text-sm font-medium bg-primary text-primary-foreground hover:bg-button-hover-background active:bg-button-active-background px-5 py-2.5 shadow transition-colors duration-200"
                             >
                                 Sign up
@@ -249,7 +249,7 @@ export default function UnauthenticatedHomePage() {
                             whileTap="tap"
                         >
                             <Link
-                                href="/signin"
+                                href="/login"
                                 className="inline-flex items-center justify-center rounded-lg text-sm font-medium border border-border bg-background hover:bg-accent px-5 py-2.5 transition-colors duration-200"
                             >
                                 Log in
