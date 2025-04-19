@@ -161,6 +161,10 @@ export default function HomeTasksSection() {
             <div
               role='button'
               className={`group flex flex-col gap-1 border backdrop-blur-md px-3 py-2 transition-all hover:shadow-sm w-full
+              ${task.status === 'PENDING' && 'border-l border-l-yellow-400'}
+              ${task.status === 'COMPLETED' && ' border-l border-l-green-500'}
+              ${task.status === 'FAILED' && ' border-l border-l-red-500'}
+
               ${index === 0 && 'rounded-t-md'}
               ${index === tasks.length - 1 && 'rounded-b-md'}
               ${editingMode && editingTaskId === task.id && 'bg-green-300'}
@@ -213,9 +217,18 @@ export default function HomeTasksSection() {
                   >
                     {task.description || 'No description provided.'}
                   </span>
-                  <span className="text-red-500 italic">
-                    {UpperCaseFirstChar(task.category)}
-                  </span>
+                  <article className='flex flex-row gap-2 items-center'>
+
+                    <span className={`text-xs italic font-medium
+                  ${task.status === 'PENDING' && 'text-yellow-600'}
+                  ${task.status === 'COMPLETED' && 'text-green-600'}
+                  ${task.status === 'FAILED' && 'text-red-600'}`}>
+                      {UpperCaseFirstChar(task.status)}
+                    </span>
+                    <span className="text-red-500 italic">
+                      {UpperCaseFirstChar(task.category)}
+                    </span>
+                  </article>
                 </div>
               )}
             </div>

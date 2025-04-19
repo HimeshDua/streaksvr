@@ -8,8 +8,6 @@ import React, {
 } from 'react';
 import { auth } from '@/lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
-import { updateStreakOnTaskComplete } from '@/actions/updateStreak.action';
-// import { updateStreakOnTaskComplete } from '@/actions/updateStreak.action';
 
 // Define the types
 type Task = {

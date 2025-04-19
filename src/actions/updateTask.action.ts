@@ -1,5 +1,6 @@
 'use server';
 import {prisma} from '@/lib/prisma';
+import {updateStreakOnTaskComplete} from './updateStreak.action';
 
 type TaskForm = {
   title: string;
@@ -20,6 +21,10 @@ export default async function updateTask(
         status: combinedData.status
       }
     });
+
+    if (combinedData.status === 'COMPLETED') {
+      await updateStreakOnTaskComplete(updatedTask.authorId);
+    }
 
     return updatedTask;
   } catch (error) {
