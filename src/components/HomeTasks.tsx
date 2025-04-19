@@ -7,7 +7,6 @@ import { Edit, Check, X } from 'lucide-react';
 import { Button } from './ui/button';
 import { useEffect, useState } from 'react';
 import UpperCaseFirstChar from '@/hooks/upperCaseFirstChar';
-import updateTask from '@/actions/updateTask.action';
 import { useMediaQuery } from 'react-responsive';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from './ui/select';
 
@@ -68,6 +67,7 @@ export default function HomeTasksSection() {
 
 
     const combinedData = {
+      taskId: editingTaskId,
       title: editedTitle || '',
       description: editedDescription || '',
       status: editedStatus ?? "PENDING"
@@ -76,8 +76,15 @@ export default function HomeTasksSection() {
 
     if (editingMode && editingTaskId) {
       try {
-        const updatedTaskFromServer = await updateTask(editingTaskId, combinedData);
-        setUpdatedTask(updatedTaskFromServer)
+        const res = await fetch("/api/tasks/edit", {
+          method: "POST",
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(combinedData)
+        })
+        const updatedTaskFromServer = await res.json()
+        if (res.ok) { setUpdatedTask(updatedTaskFromServer); }
+        else { console.error('Error updating task:', updatedTaskFromServer); }
+
       } catch (error) {
         console.error('Error updating task:', error);
       }

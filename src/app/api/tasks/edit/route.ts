@@ -1,28 +1,33 @@
 'use server';
+import {updateStreakOnTaskComplete} from '@/actions/updateStreak.action';
 import {prisma} from '@/lib/prisma';
-import {updateStreakOnTaskComplete} from './updateStreak.action';
 
 type TaskForm = {
+  taskId: string;
   title: string;
   description: string;
   status: 'COMPLETED' | 'PENDING' | 'FAILED';
 };
 
-export default async function updateTask(
-  taskId: string,
-  combinedData: TaskForm
-) {
+export async function POST(req: Request) {
+  const body = await req.json();
+  const {taskId, title, description, status}: TaskForm = body;
+  // Validate the input data
+  if (!taskId) {
+    throw new Error('Task ID is required');
+  }
+
   try {
     const updatedTask = await prisma.task.update({
       where: {id: taskId},
       data: {
-        title: combinedData.title,
-        description: combinedData.description,
-        status: combinedData.status
+        title,
+        description,
+        status
       }
     });
 
-    if (combinedData.status === 'COMPLETED') {
+    if (status === 'COMPLETED') {
       await updateStreakOnTaskComplete(updatedTask.authorId);
     }
 

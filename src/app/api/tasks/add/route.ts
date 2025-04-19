@@ -1,4 +1,3 @@
-import {updateStreakOnTaskComplete} from '@/actions/updateStreak.action';
 import {prisma} from '@/lib/prisma';
 import {NextResponse} from 'next/server';
 
@@ -36,8 +35,6 @@ async function POST(req: Request) {
         priority: priority || 'MEDIUM'
       }
     });
-
-    // const updateStreakData = await updateStreakOnTaskComplete(existingUser.id);.
 
     return NextResponse.json(newTask, {status: 201});
   } catch (error: any) {

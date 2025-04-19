@@ -58,8 +58,6 @@ export default function AddTaskModal({ authorId }: { authorId: string }) {
       });
 
       if (!res.ok) throw new Error('Failed to submit task');
-      // const data = await res.json();
-      // latestTaskDisplay(data);
       refreshUserData()
 
       setOpen(false);

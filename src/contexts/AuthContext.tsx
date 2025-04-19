@@ -128,7 +128,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const refreshUserData = async () => {
     if (!userData?.firebaseId) return;
     try {
-      const res = await fetch('/api/user', {
+      const res = await fetch('/api/user/refetch', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ firebaseId: userData.firebaseId })
