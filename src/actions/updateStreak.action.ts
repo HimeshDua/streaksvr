@@ -39,6 +39,7 @@ export async function updateStreakOnTaskComplete(userId: string) {
         longest: Math.max(streak.longest, streak.current + 1)
       }
     });
+    return updatedStreak;
   } else {
     // Missed a day — reset streak
     const resetStreak = await prisma.streaks.update({

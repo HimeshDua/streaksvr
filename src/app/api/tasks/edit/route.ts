@@ -1,8 +1,7 @@
-// src/app/api/tasks/edit/route.ts
 'use server';
 import {updateStreakOnTaskComplete} from '@/actions/updateStreak.action';
 import {prisma} from '@/lib/prisma';
-import {NextResponse} from 'next/server'; // Import NextResponse
+import {NextResponse} from 'next/server';
 
 type TaskForm = {
   taskId: string;
@@ -29,9 +28,9 @@ async function POST(req: Request) {
       }
     });
 
-    if (status === 'COMPLETED') {
-      await updateStreakOnTaskComplete(updatedTask.authorId);
-    }
+    // if (status === 'COMPLETED') {
+    //   await updateStreakOnTaskComplete(updatedTask.authorId);
+    // }
 
     return NextResponse.json(updatedTask); // Wrap the successful response in NextResponse.json()
   } catch (error) {

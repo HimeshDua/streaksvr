@@ -46,6 +46,7 @@ type AuthContextType = {
   error: string | null;
   tasks: Task[];
   streaks: Streaks | null;
+  setStreaks: React.Dispatch<React.SetStateAction<Streaks | null>>;
   refreshUserData: () => Promise<void>;
   setUpdatedTask: React.Dispatch<React.SetStateAction<Task | undefined>>;
   isAuthenticated: boolean;
@@ -158,6 +159,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     error,
     tasks,
     streaks,
+    setStreaks,
     setUpdatedTask,
     refreshUserData,
     isAuthenticated

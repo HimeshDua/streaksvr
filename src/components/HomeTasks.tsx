@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 type StatusOptions = 'COMPLETED' | 'PENDING' | 'FAILED' | null;
 
 export default function HomeTasksSection() {
-  const { userData, tasks, setUpdatedTask } = useAuth();
+  const { userData, tasks, setUpdatedTask, setStreaks } = useAuth();
   const [editingMode, setEditingMode] = useState(false);
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
 
@@ -82,8 +82,14 @@ export default function HomeTasksSection() {
           body: JSON.stringify(combinedData)
         })
         const updatedTaskFromServer = await res.json()
-        if (res.ok) { setUpdatedTask(updatedTaskFromServer); }
-        else { console.error('Error updating task:', updatedTaskFromServer); }
+        if (res.ok) {
+          const updatedStreak = updatedTaskFromServer.streaks;
+          setStreaks(updatedStreak);
+          setUpdatedTask(updatedTaskFromServer);
+        }
+        else {
+          console.error('Error updating task:', updatedTaskFromServer);
+        }
 
       } catch (error) {
         console.error('Error updating task:', error);
@@ -118,9 +124,6 @@ export default function HomeTasksSection() {
       setEditedDescription(null);
     }
   }, [editingMode]);
-
-
-
 
   return (
     <div className="space-y-0 ">
