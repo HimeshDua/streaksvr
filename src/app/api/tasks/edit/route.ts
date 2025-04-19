@@ -9,7 +9,7 @@ type TaskForm = {
   status: 'COMPLETED' | 'PENDING' | 'FAILED';
 };
 
-export async function POST(req: Request) {
+async function POST(req: Request) {
   const body = await req.json();
   const {taskId, title, description, status}: TaskForm = body;
   // Validate the input data
@@ -37,3 +37,5 @@ export async function POST(req: Request) {
     throw error;
   }
 }
+
+export {POST};
