@@ -1,33 +1,17 @@
 'use client';
 
 import { useAuth } from '@/contexts/AuthContext';
-import { Skeleton } from './ui/skeleton';
 import formatTimeDifference from '@/hooks/formatTimeDifference';
 import AddTaskModal from './AddTaskModel';
-import { Edit, Check, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Edit, Check, X } from 'lucide-react';
 import { Button } from './ui/button';
 import { useEffect, useState } from 'react';
 import UpperCaseFirstChar from '@/hooks/upperCaseFirstChar';
 import updateTask from '@/actions/updateTask.action';
-import { set } from 'date-fns';
+import { useMediaQuery } from 'react-responsive';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from './ui/select';
 
-type Task = {
-  id: string;
-  title: string;
-  description?: string | null;
-  status: 'COMPLETED' | 'PENDING' | 'FAILED';
-  dueDate?: Date | null;
-  priority: 'LOW' | 'MEDIUM' | 'HIGH';
-  category: "WORK" | "PERSONAL" | "LEARNING" | "OTHERS"
-  createdAt: Date;
-  updatedAt: Date;
-  authorId: string;
-};
-
 type StatusOptions = 'COMPLETED' | 'PENDING' | 'FAILED' | null;
-
-
 
 export default function HomeTasksSection() {
   const { userData, tasks, setUpdatedTask } = useAuth();
@@ -43,6 +27,9 @@ export default function HomeTasksSection() {
   const [editedTitle, setEditedTitle] = useState<string | null | undefined>(null)
   const [editedDescription, setEditedDescription] = useState<string | undefined | null>(null)
   const [editedStatus, setEditedStatus] = useState<StatusOptions>(null)
+
+  // responsiveness hook
+  const isSmallerThanMd = useMediaQuery({ maxWidth: '767px' });
 
   if (!userData) {
     return (
@@ -101,6 +88,13 @@ export default function HomeTasksSection() {
     setEditedDescription(null);
   }
 
+  function handleCancelEdit() {
+    setEditingMode(false);
+    setEditingTaskId(null);
+    setEditedTitle(null);
+    setEditedDescription(null);
+  }
+
   function enableTaskEdit(taskId: string) {
     setEditingTaskId(taskId);
 
@@ -119,6 +113,8 @@ export default function HomeTasksSection() {
   }, [editingMode]);
 
 
+
+
   return (
     <div className="space-y-0 ">
       <article className="flex pb-0.5 flex-row justify-between items-center">
@@ -128,28 +124,36 @@ export default function HomeTasksSection() {
         </h2>
         <article className="flex flex-row items-center gap-2">
           {/* Add */}
-          <AddTaskModal authorId={userData.firebaseId} />
+          {!editingMode && <AddTaskModal authorId={userData.firebaseId} />}
+
           {/* Editing */}
           <Button
-            className="flex flex-row justify-between items-center gap-1 font-medium cursor-pointer text-base transition-colors duration-200"
-            variant="ghost"
-            onClick={editingMode && editingTaskId ? handleEditingMode : () => setEditingMode(!editingMode)}
+            className={`${!editingMode || !editingTaskId ? "flex flex-row justify-between items-center gap-1 font-medium cursor-pointer text-base transition-colors duration-200" : ""}`}
+            variant={editingMode || editingTaskId ? "none" : "ghost"}
+            onClick={!editingMode || !editingTaskId ? () => setEditingMode(!editingMode) : undefined}
           >
-
             {editingMode ? (
               <>
-                <Check className="h-4 w-4" />
-                Done
+                {editingMode && editingTaskId ?
+                  <span className='flex items-center justify-between'>
+                    <Button variant="ghost" className='flex items-center gap-1 cursor-pointer text-base font-medium hover:bg-accent/40 transition' onClick={handleEditingMode}><Check className="h-4 w-4" />Done</Button>
+                    <Button variant="ghost" className='flex items-center gap-1  cursor-pointer text-base font-medium hover:bg-accent/40 transition' onClick={handleCancelEdit}><X className="h-4 w-4" />Cancel</Button>
+                  </span>
+                  :
+                  <Button variant="ghost" onClick={() => setEditingMode(false)} className='cursor-pointer text-base font-medium hover:bg-accent/40 transition' >
+                    <X className='h-4 w-4' />Cancel </Button>
+                }
               </>
             ) : (
-              <>
+              <Button variant="ghost" className='cursor-pointer text-base font-medium hover:bg-accent/40 transition' >
                 <Edit className="h-4 w-4" />
                 Edit
-              </>
-            )}
-          </Button>
-        </article>
-      </article>
+              </Button>
+            )
+            }
+          </Button >
+        </article >
+      </article >
 
       <div className="">
         {tasks?.length === 0 ? (
@@ -161,26 +165,29 @@ export default function HomeTasksSection() {
             <div
               role='button'
               className={`group flex flex-col gap-1 border backdrop-blur-md px-3 py-2 transition-all hover:shadow-sm w-full
-              ${task.status === 'PENDING' && 'border-l border-l-yellow-400'}
-              ${task.status === 'COMPLETED' && ' border-l border-l-green-500'}
-              ${task.status === 'FAILED' && ' border-l border-l-red-500'}
+      ${task.status === 'PENDING' && 'border-l border-l-yellow-400'}
+      ${task.status === 'COMPLETED' && ' border-l border-l-green-500'}
+      ${task.status === 'FAILED' && ' border-l border-l-red-500'}
 
-              ${index === 0 && 'rounded-t-md'}
-              ${index === tasks.length - 1 && 'rounded-b-md'}
-              ${editingMode && editingTaskId === task.id && 'bg-green-300'}
-              ${editingMode && 'bg-green-50 border-green-200 hover:bg-green-200'}
-              ${editingMode && editingTaskId !== task.id ? 'hover:bg-gray-100 cursor-pointer' : ''}`}
-              key={task.id} onClick={() => editingMode && enableTaskEdit(task.id)}>
+      ${index === 0 && 'rounded-t-md'}
+      ${index === tasks.length - 1 && 'rounded-b-md'}
+      ${editingMode && editingTaskId === task.id && 'bg-green-300'}
+      ${editingMode && 'bg-green-50 border-green-200 '}
+      ${editingMode && editingTaskId !== task.id ? 'hover:bg-green-200 ' : 'cursor-pointer'}
+    `}
+              key={task.id}
+              onClick={() => editingMode && enableTaskEdit(task.id)}
+            >
 
               {editingMode ? (
                 editingTaskId === task.id ?
-                  <article className="grid grid-cols-7 text-[12px] justify-center items-center gap-2">
-                    <input autoFocus className="col-span-3 text-sm font-medium text-foreground text-center" onChange={e => setEditedTitle(e.target.value)} value={editedTitle || task.title} />
+                  <article className="grid grid-cols-3 md:grid-cols-7 text-[12px] justify-center items-center gap-2">
+                    <input autoFocus className="md:col-span-3 text-sm font-medium text-foreground text-center" onChange={e => setEditedTitle(e.target.value)} value={editedTitle || task.title} />
 
-                    <input className="col-span-3 truncate px-2 text-center" onChange={e => setEditedDescription(e.target.value)} value={editedDescription ?? task.description ?? ''} />
+                    <input className="md:col-span-3 truncate px-2 text-center" onChange={e => setEditedDescription(e.target.value)} value={editedDescription ?? task.description ?? ''} />
 
                     <Select value={editedStatus || task.status} onValueChange={(value: string) => setEditedStatus(value as StatusOptions)}>
-                      <SelectTrigger className="col-span-1 border-accent-foreground/30 rounded-sm flex gap-1 items-center text-center justify-center">
+                      <SelectTrigger className="col-span-1 w-full border-accent-foreground/30 rounded-sm flex gap-1 items-center text-center justify-center">
                         <SelectValue placeholder="Select a status" />
                       </SelectTrigger>
                       <SelectContent>
@@ -209,9 +216,11 @@ export default function HomeTasksSection() {
                 </div>
               )}
 
-              {/* Hover extended sections */}
+              {/* Extended sections visible on smaller screens and on hover for larger screens */}
               {!editingMode && (
-                <div className="text-xs flex flex-1/2 justify-between w-full text-muted-foreground max-h-0 opacity-0 overflow-hidden group-hover:max-h-40 group-hover:opacity-100 transition-all duration-300 ease-in-out">
+                <div className={`text-xs flex flex-col md:flex-row md:flex-1/2 justify-between w-full text-muted-foreground
+        ${!isSmallerThanMd ? 'max-h-0 opacity-0 overflow-hidden group-hover:max-h-40 group-hover:opacity-100 transition-all duration-300 ease-in-out' : 'mt-1 opacity-100'}`}
+                >
                   <span
                     className={`italic ${!task.description && 'text-red-500'}`}
                   >
@@ -220,9 +229,9 @@ export default function HomeTasksSection() {
                   <article className='flex flex-row gap-2 items-center'>
 
                     <span className={`text-xs italic font-medium
-                  ${task.status === 'PENDING' && 'text-yellow-600'}
-                  ${task.status === 'COMPLETED' && 'text-green-600'}
-                  ${task.status === 'FAILED' && 'text-red-600'}`}>
+            ${task.status === 'PENDING' && 'text-yellow-600'}
+            ${task.status === 'COMPLETED' && 'text-green-600'}
+            ${task.status === 'FAILED' && 'text-red-600'}`}>
                       {UpperCaseFirstChar(task.status)}
                     </span>
                     <span className="text-red-500 italic">
