@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { useAuth } from '@/contexts/AuthContext';
 import formatTimeDifference from '@/hooks/formatTimeDifference';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -31,6 +32,20 @@ const InfoItem = ({ label, value }: { label: string; value: React.ReactNode }) =
 const ProfileInfo = ({ user, streak }: ProfileInfoProps) => {
   const pathname = usePathname();
   const isUserProfilePage = pathname === `/profile/${user.username}`;
+  const { tasks } = useAuth();
+
+  const downloadTasks = () => {
+    const blob = new Blob([JSON.stringify(tasks, null, 2)], {
+      type: 'application/json',
+    });
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'tasks.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className={`w-full ${isUserProfilePage ? "px-6 py-4" : ""}`}>
@@ -61,7 +76,7 @@ const ProfileInfo = ({ user, streak }: ProfileInfoProps) => {
         <Button variant="outline" className="rounded-lg text-sm" title="User Profile" asChild>
           {isUserProfilePage ? <span>@{user.username}</span> : <Link href={`/profile/${user.username}`}>@{user.username}</Link>}
         </Button>
-        <Button variant="outline" className="rounded-lg text-sm" title="Export your tasks">
+        <Button onClick={downloadTasks} variant="outline" className="rounded-lg text-sm" title="Export your tasks">
           Export Tasks
         </Button>
       </div>
